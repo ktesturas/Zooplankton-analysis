@@ -1,0 +1,26 @@
+{
+    "id": "848E81ED",
+    "path": "/Volumes/One Touch/Legion/00 Plankton Work/2026/Zooplankton analysis/Plankton_Experimental_May2026/Scripts/00B_Dependencies.R",
+    "project_path": "Scripts/00B_Dependencies.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1787769355264.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "398,0",
+        "scrollLine": "157"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1787769481,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1787769481625,
+    "read_only": false,
+    "read_only_alternatives": []
+}

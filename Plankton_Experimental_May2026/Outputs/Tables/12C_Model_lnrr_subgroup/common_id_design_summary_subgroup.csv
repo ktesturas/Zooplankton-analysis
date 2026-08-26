@@ -1,0 +1,13 @@
+"Category","Response_category","Broad_subgroup","n_common_id_total","n_full_factorial_common_id","n_incomplete_common_id"
+"Development","Development","Holoplankton",3,0,3
+"Development","Development","Meroplankton",168,49,119
+"Growth","Growth","Holoplankton",65,2,63
+"Growth","Growth","Meroplankton",265,40,225
+"Overall",NA,"Holoplankton",283,6,277
+"Overall",NA,"Meroplankton",610,130,480
+"Physiology","Physiology","Holoplankton",137,4,133
+"Physiology","Physiology","Meroplankton",134,36,98
+"Reproduction","Reproduction","Holoplankton",73,2,71
+"Reproduction","Reproduction","Meroplankton",192,39,153
+"Survival","Survival","Holoplankton",58,0,58
+"Survival","Survival","Meroplankton",130,21,109

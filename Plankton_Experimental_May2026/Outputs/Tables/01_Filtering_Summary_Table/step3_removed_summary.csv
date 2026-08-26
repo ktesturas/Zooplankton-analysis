@@ -1,0 +1,11 @@
+removal_reason,n
+pH: delta_CO2 > 1600,478
+T: delta_T > 8,129
+TpH: delta_CO2 > 1600,106
+pH: missing delta_CO2,62
+T: missing delta_T,50
+Other or invalid treatment,30
+TpH: delta_T > 8,27
+TpH: missing delta_CO2,6
+T: delta_T <= 0,1
+pH: delta_CO2 <= 0,1

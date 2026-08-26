@@ -1,0 +1,26 @@
+{
+    "id": "6EA9971F",
+    "path": "E:/Legion/00 Plankton Work/2026/Plankton_Observational_July2026/Scripts/03_summary_tables_observational.R",
+    "project_path": "Scripts/03_summary_tables_observational.R",
+    "type": "r_source",
+    "hash": "3376177617",
+    "contents": "",
+    "dirty": false,
+    "created": 1783264219724.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "1100,1",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1783264204,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1783264204,
+    "read_only": false,
+    "read_only_alternatives": []
+}

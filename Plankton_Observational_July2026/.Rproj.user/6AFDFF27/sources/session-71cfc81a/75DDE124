@@ -1,0 +1,26 @@
+{
+    "id": "75DDE124",
+    "path": "~/Documents/02 Research Collaborations/Zooplankton CC/Zooplankton analysis/Plankton_Observational_July2026/Scripts/01_prepare_zooplankton_data_updated.R",
+    "project_path": "Scripts/01_prepare_zooplankton_data_updated.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1787119825778.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "875,0",
+        "scrollLine": "38"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1787121241,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1787121241564,
+    "read_only": false,
+    "read_only_alternatives": []
+}

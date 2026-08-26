@@ -1,0 +1,15 @@
+Stage,Filtering_step,Rows_before,Rows_after,Rows_removed,Percent_removed_from_previous,Percent_remaining_from_original,n_pH,n_T,n_TpH,n_Other_or_NA
+0,Initial database,4826,4826,0,0,100,2511,1293,992,30
+1,Prepare numeric columns and calculate delta values; recode Treatment: T1/T2/T3 = T; TpH/TpH1/TpH2/T3pH1 = TpH,4826,4826,0,0,100,2511,1293,992,30
+2,Remove rows flagged as Duplicate,4826,4252,574,11.89,88.11,2300,1136,786,30
+3,Keep valid treatment-delta rows and remove missing deltas: pH requires non-missing 0 < delta_CO2 <= 1600; T requires non-missing 0 < delta_T <= 8; TpH requires non-missing 0 < delta_CO2 <= 1600 and 0 < delta_T <= 8,4252,3362,890,20.93,69.66,1759,956,647,0
+4,"Create Study_ID, ES_ID, and Common_id",3362,3362,0,0,69.66,1759,956,647,0
+5,"Clean Include, Group, Treatment, Response_category, and Broad_subgroup",3362,3362,0,0,69.66,1759,956,647,0
+6,Skipped marine filter because Ecosystem_category column is not present,3362,3362,0,0,69.66,1759,956,647,0
+7,Keep Biota_Group == 'Zooplankton',3362,3362,0,0,69.66,1759,956,647,0
+8,Remove rows where Include is 'No' or 'out',3362,3348,14,0.42,69.37,1759,946,643,0
+9,"Remove rows with Group matching 'platy', 'plathy', or 'elasmo'",3348,3339,9,0.27,69.19,1756,943,640,0
+10,"Convert Biota response values, SDs, sample sizes, IDs, delta_CO2, and delta_T to usable formats",3339,3339,0,0,69.19,1756,943,640,0
+11,"Keep valid effect-size inputs: Biota_C and Biota_T > 0; SDs >= 0; sample sizes > 0; non-missing Common_id, Study_ID, and ES_ID",3339,3294,45,1.35,68.26,1742,930,622,0
+12,"Convert Treatment, Broad_subgroup, and Response_category to factors",3294,3294,0,0,68.26,1742,930,622,0
+13,"Keep rows with Treatment in {pH, T, TpH}",3294,3294,0,0,68.26,1742,930,622,0

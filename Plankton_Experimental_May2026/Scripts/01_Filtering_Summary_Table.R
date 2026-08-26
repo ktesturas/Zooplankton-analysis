@@ -1,0 +1,857 @@
+# ============================================================
+# 01_Filtering_Summary_Table.R
+# Purpose:
+#   Produce a filtering summary table for the zooplankton
+#   experimental database, including treatment counts at each step.
+#
+# Important:
+#   This follows the same overall filtering logic as the modelling script:
+#   - recodes T1/T2/T3 as T
+#   - recodes TpH/TpH1/TpH2/T3pH1 as TpH
+#   - removes duplicates
+#   - keeps valid treatment-specific delta conditions:
+#       pH  = valid delta_CO2 and delta_CO2 < 1600
+#       T   = valid delta_T, delta_T > 0, delta_T <= 8
+#       TpH = valid delta_CO2 and delta_T,
+#             delta_CO2 < 1600, delta_T > 0, delta_T <= 8
+#
+# Outputs:
+#   Outputs/Tables/01_Filtering_Summary_Table/
+#     - filtering_summary_with_treatments.csv
+#     - step3_delta_diagnostics.csv
+#     - step3_removed_summary.csv
+#     - step3_removed_rows.csv
+#     - filtered_dataset_dat1.csv
+#
+#   Outputs/RDS/01_Filtering_Summary_Table/
+#     - filtering_summary_with_treatments.rds
+#     - filtered_dataset_dat1.rds
+#
+#   Outputs/Figures/01_Filtering_Summary_Table/
+#     - filtering_summary_table.png
+# ============================================================
+
+library(dplyr)
+library(readr)
+library(readxl)
+library(stringr)
+library(tibble)
+library(tidyr)
+library(grid)
+library(gridExtra)
+
+# -----------------------------
+# Project dependencies
+# -----------------------------
+source(file.path("Scripts", "00B_Dependencies.R"))
+
+# -----------------------------
+# Script name and output folders
+# -----------------------------
+script_name <- "01_Filtering_Summary_Table"
+
+table_dir  <- file.path("Outputs", "Tables", script_name)
+rds_dir    <- file.path("Outputs", "RDS", script_name)
+figure_dir <- file.path("Outputs", "Figures", script_name)
+
+dir.create(table_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(rds_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(figure_dir, recursive = TRUE, showWarnings = FALSE)
+
+# -----------------------------
+# Check input file
+# -----------------------------
+if (!file.exists(db_path)) {
+  stop("Database file not found. Check db_path in Scripts/00B_Dependencies.R:\n", db_path)
+}
+
+# -----------------------------
+# Helper: standardise treatment labels for counting
+# -----------------------------
+clean_treatment_for_count <- function(x) {
+  x <- stringr::str_squish(as.character(x))
+  
+  dplyr::case_when(
+    x %in% c("T1", "T2", "T3", "T") ~ "T",
+    x %in% c("TpH", "TpH1", "TpH2", "T3pH1") ~ "TpH",
+    x %in% c("pH", "p") ~ "pH",
+    TRUE ~ x
+  )
+}
+
+# -----------------------------
+# Helper: get treatment counts
+# -----------------------------
+get_treatment_counts <- function(df) {
+  trt <- clean_treatment_for_count(df$Treatment)
+  
+  tibble(
+    n_pH = sum(trt == "pH", na.rm = TRUE),
+    n_T = sum(trt == "T", na.rm = TRUE),
+    n_TpH = sum(trt == "TpH", na.rm = TRUE),
+    n_Other_or_NA = sum(is.na(trt) | !trt %in% c("pH", "T", "TpH"))
+  )
+}
+
+# -----------------------------
+# Helper: log filtering step
+# -----------------------------
+log_step <- function(tbl_before, tbl_after, step_name, stage_num, original_n) {
+  n_before <- nrow(tbl_before)
+  n_after  <- nrow(tbl_after)
+  n_removed <- n_before - n_after
+  
+  bind_cols(
+    tibble(
+      Stage = stage_num,
+      Filtering_step = step_name,
+      Rows_before = n_before,
+      Rows_after = n_after,
+      Rows_removed = n_removed,
+      Percent_removed_from_previous = round(ifelse(n_before == 0, NA, 100 * n_removed / n_before), 2),
+      Percent_remaining_from_original = round(ifelse(original_n == 0, NA, 100 * n_after / original_n), 2)
+    ),
+    get_treatment_counts(tbl_after)
+  )
+}
+
+# ============================================================
+# Load raw database
+# ============================================================
+
+if (!exists("raw_db_no_extra_row")) {
+  stop("raw_db_no_extra_row not found. Check that Scripts/00B_Dependencies.R creates it.")
+}
+
+raw_db <- raw_db_no_extra_row
+
+original_n <- nrow(raw_db)
+
+filter_log <- bind_cols(
+  tibble(
+    Stage = 0,
+    Filtering_step = "Initial database",
+    Rows_before = original_n,
+    Rows_after = original_n,
+    Rows_removed = 0,
+    Percent_removed_from_previous = 0,
+    Percent_remaining_from_original = 100
+  ),
+  get_treatment_counts(raw_db)
+)
+
+# ============================================================
+# Step 1: prepare numeric columns and clean treatment / duplicate
+# ============================================================
+
+step1_before <- raw_db
+
+step1_after <- raw_db %>%
+  mutate(
+    across(
+      c(C_value_CO2, C_value_Temp, T_value_CO2, T_value_Temp),
+      ~ readr::parse_number(
+        as.character(.),
+        na = c("", "NA", "na", "Na", "n/a", "N/A")
+      )
+    ),
+    delta_CO2 = T_value_CO2 - C_value_CO2,
+    delta_T   = T_value_Temp - C_value_Temp
+  ) %>%
+  mutate(
+    Treatment = stringr::str_squish(as.character(Treatment)),
+    Treatment = case_when(
+      Treatment %in% c("T1", "T2", "T3") ~ "T",
+      Treatment %in% c("TpH", "TpH1", "TpH2", "T3pH1") ~ "TpH",
+      TRUE ~ Treatment
+    ),
+    Duplicate = stringr::str_squish(as.character(Duplicate))
+  )
+
+filter_log <- bind_rows(
+  filter_log,
+  log_step(
+    step1_before,
+    step1_after,
+    "Prepare numeric columns and calculate delta values; recode Treatment: T1/T2/T3 = T; TpH/TpH1/TpH2/T3pH1 = TpH",
+    1,
+    original_n
+  )
+)
+
+# ============================================================
+# Step 2: remove duplicate rows
+# ============================================================
+
+step2_before <- step1_after
+
+step2_after <- step2_before %>%
+  filter(is.na(Duplicate) | tolower(Duplicate) != "duplicate")
+
+filter_log <- bind_rows(
+  filter_log,
+  log_step(
+    step2_before,
+    step2_after,
+    "Remove rows flagged as Duplicate",
+    2,
+    original_n
+  )
+)
+
+# ============================================================
+# Step 3: treatment-specific delta diagnostics
+# ============================================================
+
+step3_before <- step2_after
+
+step3_diag <- tibble(
+  Category = c(
+    "pH rows missing required delta_CO2",
+    "T rows missing required delta_T",
+    "TpH rows missing required delta_CO2",
+    "TpH rows missing required delta_T",
+    
+    "pH rows failing threshold: delta_CO2 <= 0",
+    "pH rows failing threshold: delta_CO2 > 1600",
+    
+    "T rows failing threshold: delta_T <= 0",
+    "T rows failing threshold: delta_T > 8",
+    
+    "TpH rows failing threshold: delta_CO2 <= 0",
+    "TpH rows failing threshold: delta_CO2 > 1600",
+    "TpH rows failing threshold: delta_T <= 0",
+    "TpH rows failing threshold: delta_T > 8"
+  ),
+  n = c(
+    sum(
+      step3_before$Treatment == "pH" &
+        is.na(step3_before$delta_CO2),
+      na.rm = TRUE
+    ),
+    
+    sum(
+      step3_before$Treatment == "T" &
+        is.na(step3_before$delta_T),
+      na.rm = TRUE
+    ),
+    
+    sum(
+      step3_before$Treatment == "TpH" &
+        is.na(step3_before$delta_CO2),
+      na.rm = TRUE
+    ),
+    
+    sum(
+      step3_before$Treatment == "TpH" &
+        is.na(step3_before$delta_T),
+      na.rm = TRUE
+    ),
+    
+    sum(
+      step3_before$Treatment == "pH" &
+        !is.na(step3_before$delta_CO2) &
+        step3_before$delta_CO2 <= 0,
+      na.rm = TRUE
+    ),
+    
+    sum(
+      step3_before$Treatment == "pH" &
+        !is.na(step3_before$delta_CO2) &
+        step3_before$delta_CO2 > 1600,
+      na.rm = TRUE
+    ),
+    
+    sum(
+      step3_before$Treatment == "T" &
+        !is.na(step3_before$delta_T) &
+        step3_before$delta_T <= 0,
+      na.rm = TRUE
+    ),
+    
+    sum(
+      step3_before$Treatment == "T" &
+        !is.na(step3_before$delta_T) &
+        step3_before$delta_T > 8,
+      na.rm = TRUE
+    ),
+    
+    sum(
+      step3_before$Treatment == "TpH" &
+        !is.na(step3_before$delta_CO2) &
+        step3_before$delta_CO2 <= 0,
+      na.rm = TRUE
+    ),
+    
+    sum(
+      step3_before$Treatment == "TpH" &
+        !is.na(step3_before$delta_CO2) &
+        step3_before$delta_CO2 > 1600,
+      na.rm = TRUE
+    ),
+    
+    sum(
+      step3_before$Treatment == "TpH" &
+        !is.na(step3_before$delta_T) &
+        step3_before$delta_T <= 0,
+      na.rm = TRUE
+    ),
+    
+    sum(
+      step3_before$Treatment == "TpH" &
+        !is.na(step3_before$delta_T) &
+        step3_before$delta_T > 8,
+      na.rm = TRUE
+    )
+  )
+)
+
+step3_after <- step3_before %>%
+  filter(
+    (Treatment == "pH" &
+       !is.na(delta_CO2) &
+       delta_CO2 > 0 &
+       delta_CO2 <= 1600) |
+      
+      (Treatment == "T" &
+         !is.na(delta_T) &
+         delta_T > 0 &
+         delta_T <= 8) |
+      
+      (Treatment == "TpH" &
+         !is.na(delta_CO2) &
+         !is.na(delta_T) &
+         delta_CO2 > 0 &
+         delta_CO2 <= 1600 &
+         delta_T > 0 &
+         delta_T <= 8)
+  )
+
+step3_removed_only <- step3_before %>%
+  filter(
+    !(
+      (Treatment == "pH" &
+         !is.na(delta_CO2) &
+         delta_CO2 > 0 &
+         delta_CO2 <= 1600) |
+        
+        (Treatment == "T" &
+           !is.na(delta_T) &
+           delta_T > 0 &
+           delta_T <= 8) |
+        
+        (Treatment == "TpH" &
+           !is.na(delta_CO2) &
+           !is.na(delta_T) &
+           delta_CO2 > 0 &
+           delta_CO2 <= 1600 &
+           delta_T > 0 &
+           delta_T <= 8)
+    )
+  ) %>%
+  mutate(
+    removal_reason = case_when(
+      Treatment == "pH" & is.na(delta_CO2) ~
+        "pH: missing delta_CO2",
+      
+      Treatment == "pH" & !is.na(delta_CO2) & delta_CO2 <= 0 ~
+        "pH: delta_CO2 <= 0",
+      
+      Treatment == "pH" & !is.na(delta_CO2) & delta_CO2 > 1600 ~
+        "pH: delta_CO2 > 1600",
+      
+      Treatment == "T" & is.na(delta_T) ~
+        "T: missing delta_T",
+      
+      Treatment == "T" & !is.na(delta_T) & delta_T <= 0 ~
+        "T: delta_T <= 0",
+      
+      Treatment == "T" & !is.na(delta_T) & delta_T > 8 ~
+        "T: delta_T > 8",
+      
+      Treatment == "TpH" & is.na(delta_CO2) & is.na(delta_T) ~
+        "TpH: missing both delta_CO2 and delta_T",
+      
+      Treatment == "TpH" & is.na(delta_CO2) ~
+        "TpH: missing delta_CO2",
+      
+      Treatment == "TpH" & is.na(delta_T) ~
+        "TpH: missing delta_T",
+      
+      Treatment == "TpH" & !is.na(delta_CO2) & delta_CO2 <= 0 ~
+        "TpH: delta_CO2 <= 0",
+      
+      Treatment == "TpH" & !is.na(delta_CO2) & delta_CO2 > 1600 ~
+        "TpH: delta_CO2 > 1600",
+      
+      Treatment == "TpH" & !is.na(delta_T) & delta_T <= 0 ~
+        "TpH: delta_T <= 0",
+      
+      Treatment == "TpH" & !is.na(delta_T) & delta_T > 8 ~
+        "TpH: delta_T > 8",
+      
+      TRUE ~ "Other or invalid treatment"
+    )
+  )
+
+step3_removed_summary <- step3_removed_only %>%
+  count(removal_reason, sort = TRUE)
+
+filter_log <- bind_rows(
+  filter_log,
+  log_step(
+    step3_before,
+    step3_after,
+    paste0(
+      "Keep valid treatment-delta rows and remove missing deltas: ",
+      "pH requires non-missing 0 < delta_CO2 <= 1600; ",
+      "T requires non-missing 0 < delta_T <= 8; ",
+      "TpH requires non-missing 0 < delta_CO2 <= 1600 ",
+      "and 0 < delta_T <= 8"
+    ),
+    3,
+    original_n
+  )
+)
+
+
+# ============================================================
+# Step 4: create Study_ID, ES_ID, and Common_id
+# ============================================================
+
+step4_before <- step3_after
+
+step4_after <- step4_before %>%
+  mutate(
+    Author_clean  = str_replace_all(str_squish(coalesce(as.character(Author), "NA")), "[^A-Za-z0-9]+", "_"),
+    Title_clean   = str_replace_all(str_squish(coalesce(as.character(Title), "NA")),  "[^A-Za-z0-9]+", "_"),
+    Species_clean = str_replace_all(str_squish(coalesce(as.character(Species), "NA")), "[^A-Za-z0-9]+", "_"),
+    Group_clean   = str_replace_all(str_squish(coalesce(as.character(Group), "NA")),   "[^A-Za-z0-9]+", "_"),
+    
+    Year_clean = coalesce(as.character(Year), "NA"),
+    
+    C_value_CO2_num  = suppressWarnings(as.numeric(C_value_CO2)),
+    C_value_Temp_num = suppressWarnings(as.numeric(C_value_Temp)),
+    # Duration_num     = suppressWarnings(as.numeric(Duration)),
+    N_C_num          = suppressWarnings(as.numeric(N_C))
+  ) %>%
+  mutate(
+    study_key = paste(
+      Author_clean,
+      Year_clean,
+      Title_clean,
+      sep = "__"
+    )
+  ) %>%
+  group_by(study_key) %>%
+  mutate(
+    Study_ID = paste0("ZOO_STUDY_", sprintf("%04d", cur_group_id()))
+  ) %>%
+  ungroup() %>%
+  mutate(
+    ES_ID = paste0("ZOO_ES_", sprintf("%06d", row_number()))
+  ) %>%
+  mutate(
+    common_key = paste(
+      Study_ID,
+      Species_clean,
+      Group_clean,
+      paste0("CO2", ifelse(is.finite(C_value_CO2_num), sprintf("%.2f", C_value_CO2_num), "NA")),
+      paste0("T",   ifelse(is.finite(C_value_Temp_num), sprintf("%.2f", C_value_Temp_num), "NA")),
+      # paste0("Dur", ifelse(is.finite(Duration_num), sprintf("%.2f", Duration_num), "NA")),
+      paste0("NC",  ifelse(is.finite(N_C_num), sprintf("%d", as.integer(round(N_C_num))), "NA")),
+      sep = "__"
+    )
+  ) %>%
+  group_by(common_key) %>%
+  mutate(
+    Common_id = paste0("ZOO_COMMON_", sprintf("%05d", cur_group_id()))
+  ) %>%
+  ungroup()
+
+filter_log <- bind_rows(
+  filter_log,
+  log_step(
+    step4_before,
+    step4_after,
+    "Create Study_ID, ES_ID, and Common_id",
+    4,
+    original_n
+  )
+)
+
+# ============================================================
+# Step 5: clean character columns
+# ============================================================
+
+step5_before <- step4_after
+
+step5_after <- step5_before %>%
+  mutate(
+    Include           = str_squish(as.character(Include)),
+    Group             = str_squish(as.character(Group)),
+    Treatment         = str_squish(as.character(Treatment)),
+    Response_category = str_squish(as.character(Response_category)),
+    Broad_subgroup    = str_squish(as.character(Broad_subgroup))
+  )
+
+filter_log <- bind_rows(
+  filter_log,
+  log_step(
+    step5_before,
+    step5_after,
+    "Clean Include, Group, Treatment, Response_category, and Broad_subgroup",
+    5,
+    original_n
+  )
+)
+
+# ============================================================
+# Step 6: keep marine rows only
+# ============================================================
+# Ecosystem_category was dropped from the database, so this step
+# is skipped. All rows from step5_after are carried forward.
+
+step6_before <- step5_after
+
+if ("Ecosystem_category" %in% names(step6_before)) {
+  
+  step6_after <- step6_before %>%
+    filter(Ecosystem_category == "Marine")
+  
+  step6_label <- "Keep Ecosystem_category == 'Marine'"
+  
+} else {
+  
+  step6_after <- step6_before
+  
+  step6_label <- "Skipped marine filter because Ecosystem_category column is not present"
+}
+
+filter_log <- bind_rows(
+  filter_log,
+  log_step(
+    step6_before,
+    step6_after,
+    step6_label,
+    6,
+    original_n
+  )
+)
+
+# ============================================================
+# Step 7: keep zooplankton rows only
+# ============================================================
+
+step7_before <- step6_after
+
+step7_after <- step7_before %>%
+  filter(Biota_Group == "Zooplankton")
+
+filter_log <- bind_rows(
+  filter_log,
+  log_step(
+    step7_before,
+    step7_after,
+    "Keep Biota_Group == 'Zooplankton'",
+    7,
+    original_n
+  )
+)
+
+# ============================================================
+# Step 8: remove excluded rows
+# ============================================================
+
+step8_before <- step7_after
+
+step8_after <- step8_before %>%
+  filter(is.na(Include) | !Include %in% c("No", "out"))
+
+filter_log <- bind_rows(
+  filter_log,
+  log_step(
+    step8_before,
+    step8_after,
+    "Remove rows where Include is 'No' or 'out'",
+    8,
+    original_n
+  )
+)
+
+# ============================================================
+# Step 9: remove non-target groups
+# ============================================================
+
+step9_before <- step8_after
+
+step9_after <- step9_before %>%
+  filter(is.na(Group) | !str_detect(Group, regex("platy|plathy|elasmo", ignore_case = TRUE)))
+
+filter_log <- bind_rows(
+  filter_log,
+  log_step(
+    step9_before,
+    step9_after,
+    "Remove rows with Group matching 'platy', 'plathy', or 'elasmo'",
+    9,
+    original_n
+  )
+)
+
+# ============================================================
+# Step 10: convert numeric fields and IDs
+# ============================================================
+
+step10_before <- step9_after
+
+step10_after <- step10_before %>%
+  mutate(
+    Biota_T     = suppressWarnings(as.numeric(Biota_T)),
+    Biota_T_sd  = suppressWarnings(as.numeric(Biota_T_sd)),
+    N_T         = suppressWarnings(as.numeric(N_T)),
+    Biota_C     = suppressWarnings(as.numeric(Biota_C)),
+    Biota_C_sd  = suppressWarnings(as.numeric(Biota_C_sd)),
+    N_C         = suppressWarnings(as.numeric(N_C)),
+    Common_id   = str_squish(as.character(Common_id)),
+    Study_ID    = str_squish(as.character(Study_ID)),
+    ES_ID       = str_squish(as.character(ES_ID)),
+    delta_CO2   = suppressWarnings(as.numeric(delta_CO2)),
+    delta_T     = suppressWarnings(as.numeric(delta_T))
+  )
+
+filter_log <- bind_rows(
+  filter_log,
+  log_step(
+    step10_before,
+    step10_after,
+    "Convert Biota response values, SDs, sample sizes, IDs, delta_CO2, and delta_T to usable formats",
+    10,
+    original_n
+  )
+)
+
+# ============================================================
+# Step 11: keep valid response, SD, N, and ID rows
+# ============================================================
+
+step11_before <- step10_after
+
+step11_after <- step11_before %>%
+  filter(
+    is.finite(Biota_C), is.finite(Biota_T),
+    Biota_C > 0, Biota_T > 0,
+    is.finite(Biota_C_sd), is.finite(Biota_T_sd),
+    Biota_C_sd >= 0, Biota_T_sd >= 0,
+    is.finite(N_C), is.finite(N_T),
+    N_C > 0, N_T > 0,
+    !is.na(Common_id), Common_id != "",
+    !is.na(Study_ID),  Study_ID  != "",
+    !is.na(ES_ID),     ES_ID     != ""
+  )
+
+filter_log <- bind_rows(
+  filter_log,
+  log_step(
+    step11_before,
+    step11_after,
+    "Keep valid effect-size inputs: Biota_C and Biota_T > 0; SDs >= 0; sample sizes > 0; non-missing Common_id, Study_ID, and ES_ID",
+    11,
+    original_n
+  )
+)
+
+# ============================================================
+# Step 12: convert grouping variables to factors
+# ============================================================
+
+step12_before <- step11_after
+
+step12_after <- step12_before %>%
+  mutate(
+    Treatment = factor(Treatment, levels = c("pH", "T", "TpH")),
+    Broad_subgroup = case_when(
+      str_detect(Broad_subgroup, regex("mero", ignore_case = TRUE)) ~ "Meroplankton",
+      str_detect(Broad_subgroup, regex("holo", ignore_case = TRUE)) ~ "Holoplankton",
+      TRUE ~ NA_character_
+    ),
+    Broad_subgroup = factor(Broad_subgroup, levels = c("Meroplankton", "Holoplankton")),
+    Response_category = factor(Response_category)
+  )
+
+filter_log <- bind_rows(
+  filter_log,
+  log_step(
+    step12_before,
+    step12_after,
+    "Convert Treatment, Broad_subgroup, and Response_category to factors",
+    12,
+    original_n
+  )
+)
+
+# ============================================================
+# Step 13: keep valid treatment groups
+# ============================================================
+
+step13_before <- step12_after
+
+step13_after <- step13_before %>%
+  filter(!is.na(Treatment))
+
+filter_log <- bind_rows(
+  filter_log,
+  log_step(
+    step13_before,
+    step13_after,
+    "Keep rows with Treatment in {pH, T, TpH}",
+    13,
+    original_n
+  )
+)
+
+dat1 <- step13_after
+
+# ============================================================
+# Create formal filtering summary table figure
+# ============================================================
+
+filter_log_table <- filter_log %>%
+  mutate(
+    Filtering_step = stringr::str_wrap(Filtering_step, width = 62)
+  ) %>%
+  rename(
+    `Filtering step` = Filtering_step,
+    `Rows before` = Rows_before,
+    `Rows after` = Rows_after,
+    `Rows removed` = Rows_removed,
+    `% removed from previous` = Percent_removed_from_previous,
+    `% remaining from original` = Percent_remaining_from_original
+  )
+
+table_theme <- gridExtra::ttheme_minimal(
+  base_size = 8.5,
+  padding = unit(c(4, 4), "mm"),
+  core = list(
+    fg_params = list(
+      hjust = 0,
+      x = 0.02
+    ),
+    bg_params = list(
+      fill = rep(c("white", "#F7F7F7"), length.out = nrow(filter_log_table)),
+      col = "#D9D9D9",
+      lwd = 0.5
+    )
+  ),
+  colhead = list(
+    fg_params = list(
+      fontface = "bold",
+      hjust = 0,
+      x = 0.02
+    ),
+    bg_params = list(
+      fill = "#EDEDED",
+      col = "#BDBDBD",
+      lwd = 0.8
+    )
+  )
+)
+
+p_filtering_table <- gridExtra::tableGrob(
+  filter_log_table,
+  rows = NULL,
+  theme = table_theme
+)
+
+# Print table figure in RStudio Plots pane
+grid::grid.newpage()
+grid::grid.draw(p_filtering_table)
+
+# ============================================================
+# Save outputs
+# ============================================================
+
+write_csv(
+  filter_log,
+  file.path(table_dir, "filtering_summary_with_treatments.csv")
+)
+
+write_csv(
+  step3_diag,
+  file.path(table_dir, "step3_delta_diagnostics.csv")
+)
+
+write_csv(
+  step3_removed_summary,
+  file.path(table_dir, "step3_removed_summary.csv")
+)
+
+write_csv(
+  step3_removed_only,
+  file.path(table_dir, "step3_removed_rows.csv")
+)
+
+write_csv(
+  dat1,
+  file.path(table_dir, "filtered_dataset_dat1.csv")
+)
+
+saveRDS(
+  dat1,
+  file.path(rds_dir, "filtered_dataset_dat1.rds")
+)
+
+saveRDS(
+  filter_log,
+  file.path(rds_dir, "filtering_summary_with_treatments.rds")
+)
+
+png(
+  filename = file.path(figure_dir, "filtering_summary_table.png"),
+  width = 5200,
+  height = 2500,
+  res = 300
+)
+
+grid::grid.newpage()
+grid::grid.draw(p_filtering_table)
+
+dev.off()
+
+# ============================================================
+# Print tables in console
+# ============================================================
+
+cat("\n==============================\n")
+cat("FILTERING SUMMARY TABLE\n")
+cat("==============================\n\n")
+
+print(filter_log, n = Inf)
+
+cat("\n==============================\n")
+cat("STEP 3 DELTA DIAGNOSTICS\n")
+cat("==============================\n\n")
+
+print(step3_diag, n = Inf)
+
+cat("\n==============================\n")
+cat("STEP 3 REMOVED ROW SUMMARY\n")
+cat("==============================\n\n")
+
+print(step3_removed_summary, n = Inf)
+
+cat("\n==============================\n")
+cat("FINAL DATASET SUMMARY\n")
+cat("==============================\n\n")
+
+cat("Final rows in dat1:", nrow(dat1), "\n\n")
+
+cat("Final treatment counts:\n")
+cat("pH :", sum(dat1$Treatment == "pH", na.rm = TRUE), "\n")
+cat("T  :", sum(dat1$Treatment == "T", na.rm = TRUE), "\n")
+cat("TpH:", sum(dat1$Treatment == "TpH", na.rm = TRUE), "\n\n")
+
+cat("Saved outputs to:\n")
+cat("Tables :", table_dir, "\n")
+cat("RDS    :", rds_dir, "\n")
+cat("Figures:", figure_dir, "\n")
