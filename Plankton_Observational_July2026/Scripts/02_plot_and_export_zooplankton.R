@@ -12,60 +12,19 @@
 #   - Previous work                = darker grey
 # ===========================================
 
-
-# ---- Packages ----
-suppressPackageStartupMessages({
-  library(dplyr)
-  library(ggplot2)
-  library(patchwork)
-  library(scales)
-  library(showtext)
-  library(here)
-  library(grid)
-})
+# Load Packages
+pacman::p_load(dplyr, ggplot2, patchwork, scales, showtext, here, grid)
 
 
-# ===========================================
 # Project paths
-# ===========================================
-
 script_name <- "02_plot_and_export_zooplankton"
-
 scripts_dir <- here::here("Scripts")
 figures_dir <- here::here("Outputs", script_name)
-
 dir.create(figures_dir, showWarnings = FALSE, recursive = TRUE)
 
-
-# ===========================================
 # Source prepared data from Script 1
-# ===========================================
-
-script1_candidates <- c(
-  here::here("Scripts", "01_prepare_zooplankton_data.R"),
-  here::here("Scripts", "01_prepare_zooplankton_data_updated.R"),
-  here::here("Scripts", "01_make_zooplankton_plot.R"),
-  
-  here::here("Observational", "01_prepare_zooplankton_data.R"),
-  here::here("Observational", "01_make_zooplankton_plot.R")
-)
-
-data_script <- script1_candidates[file.exists(script1_candidates)][1]
-
-if (length(data_script) == 0 || is.na(data_script)) {
-  stop(
-    paste0(
-      "Cannot find Script 1. Save it in your project as one of these files:\n\n",
-      paste(script1_candidates, collapse = "\n"),
-      "\n\nRecommended location:\n",
-      here::here("Scripts", "01_prepare_zooplankton_data.R")
-    )
-  )
-}
-
-message("Sourcing prepared data from: ", data_script)
+data_script <- here::here("Scripts","01_prepare_zooplankton_data.R")
 source(data_script)
-
 
 # ===========================================
 # Font setup
@@ -176,7 +135,6 @@ major_sep_col <- "grey10"
 # Mean colours
 mean_col_dist <- "#2B6CB0"
 mean_col_phen <- "black"
-
 
 # ===========================================
 # Axis limits and breaks
@@ -1025,7 +983,7 @@ make_bottom_panel <- function(show_grid = TRUE) {
     coord_cartesian(
       clip = "off"
     )
-  
+
   
   # =========================================
   # Sample-size labels
@@ -1348,3 +1306,4 @@ message(
   "Saved NO-GRID PNG to: ",
   png_no_grid_out
 )
+
