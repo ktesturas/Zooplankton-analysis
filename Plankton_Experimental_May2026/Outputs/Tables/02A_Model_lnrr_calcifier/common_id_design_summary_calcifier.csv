@@ -1,0 +1,13 @@
+"Category","Response_category","Calcifier","n_common_id_total","n_full_factorial_common_id","n_incomplete_common_id"
+"Development","Development","Calcifier",138,31,107
+"Development","Development","Non-calcifier",37,19,18
+"Growth","Growth","Calcifier",254,21,233
+"Growth","Growth","Non-calcifier",74,20,54
+"Overall",NA,"Calcifier",527,77,450
+"Overall",NA,"Non-calcifier",368,64,304
+"Physiology","Physiology","Calcifier",152,19,133
+"Physiology","Physiology","Non-calcifier",124,26,98
+"Reproduction","Reproduction","Calcifier",145,26,119
+"Reproduction","Reproduction","Non-calcifier",122,15,107
+"Survival","Survival","Calcifier",99,8,91
+"Survival","Survival","Non-calcifier",89,13,76

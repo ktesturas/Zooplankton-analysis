@@ -5,7 +5,14 @@
 # ===========================================
 
 # Load packages
-pacman::p_load(dplyr, tidyr, here, openxlsx)
+pacman::p_load(
+  dplyr,
+  tidyr,
+  here,
+  openxlsx,
+  grid,
+  gridExtra
+)
 
 # Source the current data preparation 
 data_script <- here::here("Scripts", "01_prepare_zooplankton_data.R")
@@ -215,6 +222,103 @@ supervisor_summary <- master_plotted_only %>%
     Panel, Metric, Study, Block, Taxon, n,
     value_ci, unit, ci_method, denominator_note
   )
+
+# ===========================================
+# Export supervisor summary as a PNG table
+# ===========================================
+
+supervisor_summary_display <- supervisor_summary %>%
+  mutate(
+    across(everything(), as.character),
+    across(everything(), ~ replace_na(.x, "—"))
+  ) %>%
+  rename(
+    `Panel` = Panel,
+    `Metric` = Metric,
+    `Study` = Study,
+    `Block` = Block,
+    `Taxon` = Taxon,
+    `n` = n,
+    `Value (95% CI)` = value_ci,
+    `Unit` = unit,
+    `CI method` = ci_method,
+    `Denominator` = denominator_note
+  )
+
+# Add one row for the column headings
+n_table_rows <- nrow(supervisor_summary_display) + 1L
+
+# Dynamically increase the image height according to the number of rows
+table_height_in <- max(
+  6,
+  0.32 * n_table_rows + 0.8
+)
+
+supervisor_table_grob <- gridExtra::tableGrob(
+  supervisor_summary_display,
+  rows = NULL,
+  theme = gridExtra::ttheme_minimal(
+    base_size = 8.5,
+    base_family = "sans",
+    padding = grid::unit(c(1.5, 2), "mm"),
+    colhead = list(
+      fg_params = list(
+        fontface = "bold",
+        col = "grey10"
+      ),
+      bg_params = list(
+        fill = "grey90",
+        col = NA
+      )
+    ),
+    core = list(
+      fg_params = list(
+        col = "grey10"
+      ),
+      bg_params = list(
+        fill = "white",
+        col = NA
+      )
+    )
+  )
+)
+
+supervisor_table_title <- grid::textGrob(
+  "Zooplankton observational synthesis: supervisor summary",
+  gp = grid::gpar(
+    fontsize = 15,
+    fontface = "bold",
+    col = "grey10",
+    fontfamily = "sans"
+  )
+)
+
+supervisor_table_complete <- gridExtra::arrangeGrob(
+  supervisor_table_grob,
+  top = supervisor_table_title,
+  padding = grid::unit(0.25, "in")
+)
+
+supervisor_png <- file.path(
+  out_dir,
+  "supervisor_summary.png"
+)
+
+png(
+  filename = supervisor_png,
+  width = 18,
+  height = table_height_in,
+  units = "in",
+  res = 300,
+  bg = "white"
+)
+
+grid::grid.newpage()
+grid::grid.draw(supervisor_table_complete)
+
+dev.off()
+
+message("Supervisor summary PNG exported to: ", supervisor_png)
 
 # ===========================================
 # Export Excel workbook

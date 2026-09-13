@@ -1,6 +1,6 @@
 removal_reason,n
 pH: delta_CO2 > 1600,478
-T: delta_T > 8,129
+T: delta_T > 8,133
 TpH: delta_CO2 > 1600,106
 pH: missing delta_CO2,62
 T: missing delta_T,50

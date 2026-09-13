@@ -27,7 +27,6 @@
 #   This script does NOT save a new database file.
 # ============================================================
 
-
 # -----------------------------
 # Load packages
 # -----------------------------
@@ -50,7 +49,8 @@ suppressPackageStartupMessages({
 
 # For Excel:
 # db_path <- file.path("Data", "zooplankton_database_with_duplicate_flag.xlsx") # old file
-db_path <- file.path("Data", "Updated_zooplankton_database_25May2026.xlsx") # new file
+# db_path <- file.path("Data", "Updated_zooplankton_database_25May2026.xlsx") # new file
+db_path <- file.path("Data", "Updated_zooplankton_database_10Sept2026.xlsx") # newer file
 
 
 # -----------------------------
@@ -72,7 +72,7 @@ file_ext <- tools::file_ext(db_path) %>%
 # New database has one grouping row before the actual column names.
 # Old database does not.
 
-if (stringr::str_detect(basename(db_path), "Updated_zooplankton_database_25May2026")) {
+if (stringr::str_detect(basename(db_path), "Updated_zooplankton_database_10Sept2026")) {
   skip_rows <- 1
 } else {
   skip_rows <- 0
@@ -614,4 +614,3 @@ print(table(zoo_db_with_duplicate_flag$Duplicate, useNA = "ifany"))
 cat("\nDone. No new database file was saved.\n")
 cat("Object created: zoo_db_with_duplicate_flag\n")
 cat("Object created: raw_db_no_extra_row\n")
-

@@ -1,0 +1,145 @@
+"direction_scenario","analysis_scope","Category","Calcifier","Treatment","k","n_studies","n_common_id","n_full_factorial_common_id","n_pH","n_T","n_TpH","Mean lnRR","95% CI","p-value","% change","% change 95% CI","model_status","model_message"
+"ambiguous_dropped","all_data","Growth","Calcifier","pH",542,183,249,20,354,104,84,"-0.118","-0.146 to -0.091","<0.001","-11.1%","-13.6% to -8.7%","fitted",NA
+"ambiguous_dropped","all_data","Growth","Calcifier","T",542,183,249,20,354,104,84,"0.009","-0.039 to 0.057","0.720","0.9%","-3.8% to 5.8%","fitted",NA
+"ambiguous_dropped","all_data","Growth","Calcifier","T + pH",542,183,249,20,354,104,84,"-0.081","-0.130 to -0.032","0.001","-7.8%","-12.2% to -3.1%","fitted",NA
+"ambiguous_dropped","all_data","Growth","Non-calcifier","pH",158,46,55,19,88,33,37,"-0.068","-0.140 to 0.004","0.063","-6.6%","-13.1% to 0.4%","fitted",NA
+"ambiguous_dropped","all_data","Growth","Non-calcifier","T",158,46,55,19,88,33,37,"0.102","0.004 to 0.199","0.041","10.7%","0.4% to 22.1%","fitted",NA
+"ambiguous_dropped","all_data","Growth","Non-calcifier","T + pH",158,46,55,19,88,33,37,"0.069","-0.028 to 0.166","0.162","7.1%","-2.7% to 18.0%","fitted",NA
+"ambiguous_dropped","all_data","Development","Calcifier","pH",356,81,111,23,122,160,74,"-0.402","-0.577 to -0.227","<0.001","-33.1%","-43.9% to -20.3%","fitted",NA
+"ambiguous_dropped","all_data","Development","Calcifier","T",356,81,111,23,122,160,74,"-0.510","-0.706 to -0.313","<0.001","-39.9%","-50.7% to -26.9%","fitted",NA
+"ambiguous_dropped","all_data","Development","Calcifier","T + pH",356,81,111,23,122,160,74,"-0.276","-0.494 to -0.058","0.013","-24.1%","-39.0% to -5.7%","fitted",NA
+"ambiguous_dropped","all_data","Development","Non-calcifier","pH",65,18,26,14,21,21,23,"-0.040","-0.535 to 0.456","0.876","-3.9%","-41.4% to 57.7%","fitted",NA
+"ambiguous_dropped","all_data","Development","Non-calcifier","T",65,18,26,14,21,21,23,"-0.036","-0.536 to 0.464","0.888","-3.5%","-41.5% to 59.1%","fitted",NA
+"ambiguous_dropped","all_data","Development","Non-calcifier","T + pH",65,18,26,14,21,21,23,"0.004","-0.488 to 0.495","0.989","0.4%","-38.6% to 64.1%","fitted",NA
+"ambiguous_dropped","all_data","Physiology","Calcifier","pH",169,50,91,3,97,35,37,"-0.368","-0.602 to -0.133","0.002","-30.8%","-45.3% to -12.4%","fitted",NA
+"ambiguous_dropped","all_data","Physiology","Calcifier","T",169,50,91,3,97,35,37,"-0.440","-0.777 to -0.103","0.010","-35.6%","-54.0% to -9.8%","fitted",NA
+"ambiguous_dropped","all_data","Physiology","Calcifier","T + pH",169,50,91,3,97,35,37,"-0.606","-0.946 to -0.265","<0.001","-45.4%","-61.2% to -23.3%","fitted",NA
+"ambiguous_dropped","all_data","Physiology","Non-calcifier","pH",149,51,65,6,75,58,16,"-0.089","-0.226 to 0.047","0.200","-8.5%","-20.2% to 4.8%","fitted",NA
+"ambiguous_dropped","all_data","Physiology","Non-calcifier","T",149,51,65,6,75,58,16,"-0.069","-0.208 to 0.070","0.332","-6.7%","-18.8% to 7.3%","fitted",NA
+"ambiguous_dropped","all_data","Physiology","Non-calcifier","T + pH",149,51,65,6,75,58,16,"-0.029","-0.215 to 0.157","0.757","-2.9%","-19.4% to 17.0%","fitted",NA
+"ambiguous_dropped","all_data","Reproduction","Calcifier","pH",371,63,102,26,135,123,113,"-0.239","-0.332 to -0.145","<0.001","-21.2%","-28.3% to -13.5%","fitted",NA
+"ambiguous_dropped","all_data","Reproduction","Calcifier","T",371,63,102,26,135,123,113,"-0.128","-0.235 to -0.022","0.018","-12.1%","-20.9% to -2.2%","fitted",NA
+"ambiguous_dropped","all_data","Reproduction","Calcifier","T + pH",371,63,102,26,135,123,113,"-0.253","-0.359 to -0.147","<0.001","-22.3%","-30.2% to -13.7%","fitted",NA
+"ambiguous_dropped","all_data","Reproduction","Non-calcifier","pH",268,60,85,13,126,116,26,"0.003","-0.154 to 0.160","0.969","0.3%","-14.3% to 17.4%","fitted",NA
+"ambiguous_dropped","all_data","Reproduction","Non-calcifier","T",268,60,85,13,126,116,26,"0.031","-0.125 to 0.188","0.695","3.2%","-11.8% to 20.7%","fitted",NA
+"ambiguous_dropped","all_data","Reproduction","Non-calcifier","T + pH",268,60,85,13,126,116,26,"-0.538","-0.775 to -0.302","<0.001","-41.6%","-53.9% to -26.1%","fitted",NA
+"ambiguous_dropped","all_data","Survival","Calcifier","pH",253,74,94,8,154,74,25,"-0.154","-0.249 to -0.059","0.002","-14.3%","-22.0% to -5.7%","fitted",NA
+"ambiguous_dropped","all_data","Survival","Calcifier","T",253,74,94,8,154,74,25,"-0.256","-0.406 to -0.106","<0.001","-22.6%","-33.4% to -10.1%","fitted",NA
+"ambiguous_dropped","all_data","Survival","Calcifier","T + pH",253,74,94,8,154,74,25,"-0.214","-0.438 to 0.010","0.062","-19.2%","-35.4% to 1.0%","fitted",NA
+"ambiguous_dropped","all_data","Survival","Non-calcifier","pH",164,40,59,13,124,20,20,"-0.287","-0.465 to -0.110","0.001","-25.0%","-37.2% to -10.4%","fitted",NA
+"ambiguous_dropped","all_data","Survival","Non-calcifier","T",164,40,59,13,124,20,20,"-0.227","-0.506 to 0.051","0.110","-20.3%","-39.7% to 5.3%","fitted",NA
+"ambiguous_dropped","all_data","Survival","Non-calcifier","T + pH",164,40,59,13,124,20,20,"-0.150","-0.432 to 0.132","0.297","-13.9%","-35.1% to 14.1%","fitted",NA
+"ambiguous_dropped","all_data","Overall","Calcifier","pH",1691,285,472,61,862,496,333,"-0.214","-0.268 to -0.160","<0.001","-19.2%","-23.5% to -14.8%","fitted",NA
+"ambiguous_dropped","all_data","Overall","Calcifier","T",1691,285,472,61,862,496,333,"-0.243","-0.318 to -0.169","<0.001","-21.6%","-27.2% to -15.6%","fitted",NA
+"ambiguous_dropped","all_data","Overall","Calcifier","T + pH",1691,285,472,61,862,496,333,"-0.266","-0.344 to -0.189","<0.001","-23.4%","-29.1% to -17.2%","fitted",NA
+"ambiguous_dropped","all_data","Overall","Non-calcifier","pH",804,159,247,46,434,248,122,"-0.117","-0.196 to -0.037","0.004","-11.0%","-17.8% to -3.7%","fitted",NA
+"ambiguous_dropped","all_data","Overall","Non-calcifier","T",804,159,247,46,434,248,122,"0.001","-0.092 to 0.094","0.983","0.1%","-8.8% to 9.9%","fitted",NA
+"ambiguous_dropped","all_data","Overall","Non-calcifier","T + pH",804,159,247,46,434,248,122,"-0.133","-0.251 to -0.015","0.027","-12.5%","-22.2% to -1.5%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Growth","Calcifier","pH",136,18,20,20,35,39,62,"-0.113","-0.208 to -0.018","0.020","-10.7%","-18.8% to -1.8%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Growth","Calcifier","T",136,18,20,20,35,39,62,"0.057","-0.038 to 0.152","0.241","5.8%","-3.7% to 16.4%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Growth","Calcifier","T + pH",136,18,20,20,35,39,62,"-0.027","-0.116 to 0.062","0.555","-2.7%","-11.0% to 6.4%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Growth","Non-calcifier","pH",65,18,19,19,20,23,22,"-0.085","-0.203 to 0.034","0.163","-8.1%","-18.4% to 3.5%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Growth","Non-calcifier","T",65,18,19,19,20,23,22,"0.078","-0.037 to 0.193","0.183","8.1%","-3.6% to 21.2%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Growth","Non-calcifier","T + pH",65,18,19,19,20,23,22,"0.028","-0.088 to 0.144","0.637","2.8%","-8.4% to 15.5%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Development","Calcifier","pH",146,17,23,23,45,37,64,"0.101","-0.076 to 0.278","0.264","10.6%","-7.3% to 32.0%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Development","Calcifier","T",146,17,23,23,45,37,64,"-0.223","-0.407 to -0.039","0.018","-20.0%","-33.5% to -3.8%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Development","Calcifier","T + pH",146,17,23,23,45,37,64,"0.057","-0.107 to 0.221","0.498","5.8%","-10.2% to 24.7%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Development","Non-calcifier","pH",46,11,14,14,14,16,16,"0.089","-0.458 to 0.637","0.749","9.4%","-36.8% to 89.1%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Development","Non-calcifier","T",46,11,14,14,14,16,16,"0.320","-0.208 to 0.849","0.235","37.8%","-18.8% to 133.7%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Development","Non-calcifier","T + pH",46,11,14,14,14,16,16,"0.550","0.014 to 1.085","0.044","73.3%","1.4% to 196.0%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Physiology","Calcifier","pH",21,3,3,3,6,6,9,"-0.625","-1.596 to 0.346","0.207","-46.5%","-79.7% to 41.4%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Physiology","Calcifier","T",21,3,3,3,6,6,9,"-0.279","-1.258 to 0.700","0.577","-24.3%","-71.6% to 101.5%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Physiology","Calcifier","T + pH",21,3,3,3,6,6,9,"-1.102","-2.045 to -0.159","0.022","-66.8%","-87.1% to -14.7%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Physiology","Non-calcifier","pH",27,6,6,6,7,10,10,"-0.025","-0.213 to 0.164","0.796","-2.5%","-19.2% to 17.8%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Physiology","Non-calcifier","T",27,6,6,6,7,10,10,"0.043","-0.146 to 0.231","0.657","4.4%","-13.6% to 26.0%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Physiology","Non-calcifier","T + pH",27,6,6,6,7,10,10,"0.023","-0.165 to 0.212","0.810","2.3%","-15.2% to 23.6%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Reproduction","Calcifier","pH",185,15,26,26,53,45,87,"-0.149","-0.241 to -0.057","0.002","-13.8%","-21.4% to -5.5%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Reproduction","Calcifier","T",185,15,26,26,53,45,87,"-0.070","-0.165 to 0.025","0.151","-6.8%","-15.3% to 2.6%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Reproduction","Calcifier","T + pH",185,15,26,26,53,45,87,"-0.142","-0.230 to -0.054","0.002","-13.2%","-20.6% to -5.2%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Reproduction","Non-calcifier","pH",53,10,13,13,15,19,19,"-0.069","-0.298 to 0.159","0.553","-6.7%","-25.8% to 17.3%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Reproduction","Non-calcifier","T",53,10,13,13,15,19,19,"-0.279","-0.498 to -0.060","0.013","-24.3%","-39.3% to -5.8%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Reproduction","Non-calcifier","T + pH",53,10,13,13,15,19,19,"-0.355","-0.576 to -0.134","0.002","-29.9%","-43.8% to -12.5%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Survival","Calcifier","pH",42,8,8,8,12,12,18,"0.195","-0.125 to 0.514","0.233","21.5%","-11.7% to 67.2%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Survival","Calcifier","T",42,8,8,8,12,12,18,"0.222","-0.106 to 0.549","0.184","24.8%","-10.0% to 73.2%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Survival","Calcifier","T + pH",42,8,8,8,12,12,18,"0.240","-0.067 to 0.546","0.125","27.1%","-6.5% to 72.7%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Survival","Non-calcifier","pH",52,12,13,13,16,17,19,"0.085","-0.248 to 0.417","0.618","8.8%","-21.9% to 51.8%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Survival","Non-calcifier","T",52,12,13,13,16,17,19,"-0.009","-0.339 to 0.321","0.957","-0.9%","-28.7% to 37.8%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Survival","Non-calcifier","T + pH",52,12,13,13,16,17,19,"0.106","-0.222 to 0.433","0.527","11.1%","-19.9% to 54.2%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Overall","Calcifier","pH",567,35,61,61,167,143,257,"-0.121","-0.224 to -0.018","0.021","-11.4%","-20.1% to -1.8%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Overall","Calcifier","T",567,35,61,61,167,143,257,"-0.126","-0.232 to -0.021","0.019","-11.9%","-20.7% to -2.0%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Overall","Calcifier","T + pH",567,35,61,61,167,143,257,"-0.124","-0.221 to -0.027","0.012","-11.7%","-19.9% to -2.7%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Overall","Non-calcifier","pH",245,30,46,46,73,85,87,"-0.087","-0.236 to 0.061","0.248","-8.4%","-21.0% to 6.3%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Overall","Non-calcifier","T",245,30,46,46,73,85,87,"-0.048","-0.190 to 0.094","0.508","-4.7%","-17.3% to 9.9%","fitted",NA
+"ambiguous_dropped","full_factorial_only","Overall","Non-calcifier","T + pH",245,30,46,46,73,85,87,"-0.046","-0.188 to 0.095","0.522","-4.5%","-17.1% to 10.0%","fitted",NA
+"ambiguous_negative","all_data","Growth","Calcifier","pH",550,187,254,21,355,109,86,"-0.116","-0.143 to -0.088","<0.001","-10.9%","-13.3% to -8.5%","fitted",NA
+"ambiguous_negative","all_data","Growth","Calcifier","T",550,187,254,21,355,109,86,"0.014","-0.033 to 0.060","0.564","1.4%","-3.2% to 6.2%","fitted",NA
+"ambiguous_negative","all_data","Growth","Calcifier","T + pH",550,187,254,21,355,109,86,"-0.071","-0.119 to -0.023","0.004","-6.9%","-11.2% to -2.3%","fitted",NA
+"ambiguous_negative","all_data","Growth","Non-calcifier","pH",207,63,74,20,118,42,47,"-0.040","-0.121 to 0.041","0.334","-3.9%","-11.4% to 4.2%","fitted",NA
+"ambiguous_negative","all_data","Growth","Non-calcifier","T",207,63,74,20,118,42,47,"0.050","-0.069 to 0.169","0.411","5.1%","-6.7% to 18.4%","fitted",NA
+"ambiguous_negative","all_data","Growth","Non-calcifier","T + pH",207,63,74,20,118,42,47,"0.024","-0.092 to 0.140","0.687","2.4%","-8.8% to 15.0%","fitted",NA
+"ambiguous_negative","all_data","Development","Calcifier","pH",452,101,138,31,172,181,99,"-0.204","-0.360 to -0.047","0.011","-18.4%","-30.3% to -4.6%","fitted",NA
+"ambiguous_negative","all_data","Development","Calcifier","T",452,101,138,31,172,181,99,"-0.307","-0.487 to -0.126","<0.001","-26.4%","-38.6% to -11.9%","fitted",NA
+"ambiguous_negative","all_data","Development","Calcifier","T + pH",452,101,138,31,172,181,99,"-0.029","-0.226 to 0.168","0.773","-2.8%","-20.2% to 18.3%","fitted",NA
+"ambiguous_negative","all_data","Development","Non-calcifier","pH",103,25,37,19,35,33,35,"-0.036","-0.345 to 0.272","0.818","-3.6%","-29.2% to 31.3%","fitted",NA
+"ambiguous_negative","all_data","Development","Non-calcifier","T",103,25,37,19,35,33,35,"0.053","-0.270 to 0.377","0.746","5.5%","-23.6% to 45.7%","fitted",NA
+"ambiguous_negative","all_data","Development","Non-calcifier","T + pH",103,25,37,19,35,33,35,"0.108","-0.212 to 0.428","0.508","11.4%","-19.1% to 53.4%","fitted",NA
+"ambiguous_negative","all_data","Physiology","Calcifier","pH",361,82,152,19,195,79,87,"-0.171","-0.322 to -0.020","0.026","-15.7%","-27.5% to -2.0%","fitted",NA
+"ambiguous_negative","all_data","Physiology","Calcifier","T",361,82,152,19,195,79,87,"-0.226","-0.442 to -0.011","0.040","-20.2%","-35.7% to -1.1%","fitted",NA
+"ambiguous_negative","all_data","Physiology","Calcifier","T + pH",361,82,152,19,195,79,87,"-0.306","-0.520 to -0.092","0.005","-26.4%","-40.5% to -8.8%","fitted",NA
+"ambiguous_negative","all_data","Physiology","Non-calcifier","pH",343,89,124,26,183,102,58,"-0.042","-0.127 to 0.044","0.338","-4.1%","-12.0% to 4.5%","fitted",NA
+"ambiguous_negative","all_data","Physiology","Non-calcifier","T",343,89,124,26,183,102,58,"-0.172","-0.274 to -0.069","<0.001","-15.8%","-24.0% to -6.7%","fitted",NA
+"ambiguous_negative","all_data","Physiology","Non-calcifier","T + pH",343,89,124,26,183,102,58,"-0.095","-0.220 to 0.029","0.134","-9.1%","-19.8% to 3.0%","fitted",NA
+"ambiguous_negative","all_data","Reproduction","Calcifier","pH",450,97,145,26,210,125,115,"-0.085","-0.160 to -0.009","0.029","-8.1%","-14.8% to -0.9%","fitted",NA
+"ambiguous_negative","all_data","Reproduction","Calcifier","T",450,97,145,26,210,125,115,"-0.025","-0.125 to 0.074","0.617","-2.5%","-11.8% to 7.7%","fitted",NA
+"ambiguous_negative","all_data","Reproduction","Calcifier","T + pH",450,97,145,26,210,125,115,"-0.133","-0.229 to -0.036","0.007","-12.4%","-20.5% to -3.6%","fitted",NA
+"ambiguous_negative","all_data","Reproduction","Non-calcifier","pH",326,88,122,15,173,123,30,"0.116","-0.006 to 0.238","0.062","12.3%","-0.6% to 26.9%","fitted",NA
+"ambiguous_negative","all_data","Reproduction","Non-calcifier","T",326,88,122,15,173,123,30,"0.022","-0.124 to 0.167","0.767","2.2%","-11.6% to 18.2%","fitted",NA
+"ambiguous_negative","all_data","Reproduction","Non-calcifier","T + pH",326,88,122,15,173,123,30,"-0.444","-0.655 to -0.232","<0.001","-35.8%","-48.1% to -20.7%","fitted",NA
+"ambiguous_negative","all_data","Survival","Calcifier","pH",280,76,99,8,154,86,40,"-0.153","-0.252 to -0.054","0.002","-14.2%","-22.3% to -5.3%","fitted",NA
+"ambiguous_negative","all_data","Survival","Calcifier","T",280,76,99,8,154,86,40,"-0.261","-0.410 to -0.111","<0.001","-22.9%","-33.6% to -10.5%","fitted",NA
+"ambiguous_negative","all_data","Survival","Calcifier","T + pH",280,76,99,8,154,86,40,"-0.046","-0.254 to 0.162","0.666","-4.5%","-22.4% to 17.6%","fitted",NA
+"ambiguous_negative","all_data","Survival","Non-calcifier","pH",212,62,89,13,142,50,20,"-0.184","-0.325 to -0.043","0.010","-16.8%","-27.8% to -4.2%","fitted",NA
+"ambiguous_negative","all_data","Survival","Non-calcifier","T",212,62,89,13,142,50,20,"-0.112","-0.294 to 0.070","0.228","-10.6%","-25.4% to 7.2%","fitted",NA
+"ambiguous_negative","all_data","Survival","Non-calcifier","T + pH",212,62,89,13,142,50,20,"-0.076","-0.315 to 0.162","0.530","-7.3%","-27.0% to 17.6%","fitted",NA
+"ambiguous_negative","all_data","Overall","Calcifier","pH",2093,310,527,77,1086,580,427,"-0.153","-0.203 to -0.104","<0.001","-14.2%","-18.3% to -9.8%","fitted",NA
+"ambiguous_negative","all_data","Overall","Calcifier","T",2093,310,527,77,1086,580,427,"-0.178","-0.248 to -0.109","<0.001","-16.3%","-22.0% to -10.3%","fitted",NA
+"ambiguous_negative","all_data","Overall","Calcifier","T + pH",2093,310,527,77,1086,580,427,"-0.153","-0.226 to -0.079","<0.001","-14.2%","-20.3% to -7.6%","fitted",NA
+"ambiguous_negative","all_data","Overall","Non-calcifier","pH",1191,223,368,64,651,350,190,"-0.037","-0.098 to 0.023","0.229","-3.7%","-9.4% to 2.4%","fitted",NA
+"ambiguous_negative","all_data","Overall","Non-calcifier","T",1191,223,368,64,651,350,190,"-0.032","-0.108 to 0.043","0.399","-3.2%","-10.2% to 4.4%","fitted",NA
+"ambiguous_negative","all_data","Overall","Non-calcifier","T + pH",1191,223,368,64,651,350,190,"-0.086","-0.179 to 0.007","0.070","-8.2%","-16.4% to 0.7%","fitted",NA
+"ambiguous_negative","full_factorial_only","Growth","Calcifier","pH",139,19,21,21,36,40,63,"-0.106","-0.197 to -0.016","0.021","-10.1%","-17.9% to -1.6%","fitted",NA
+"ambiguous_negative","full_factorial_only","Growth","Calcifier","T",139,19,21,21,36,40,63,"0.059","-0.031 to 0.150","0.197","6.1%","-3.0% to 16.1%","fitted",NA
+"ambiguous_negative","full_factorial_only","Growth","Calcifier","T + pH",139,19,21,21,36,40,63,"-0.022","-0.107 to 0.063","0.614","-2.2%","-10.1% to 6.5%","fitted",NA
+"ambiguous_negative","full_factorial_only","Growth","Non-calcifier","pH",89,19,20,20,26,32,31,"-0.069","-0.200 to 0.062","0.299","-6.7%","-18.1% to 6.4%","fitted",NA
+"ambiguous_negative","full_factorial_only","Growth","Non-calcifier","T",89,19,20,20,26,32,31,"0.017","-0.108 to 0.141","0.794","1.7%","-10.2% to 15.1%","fitted",NA
+"ambiguous_negative","full_factorial_only","Growth","Non-calcifier","T + pH",89,19,20,20,26,32,31,"-0.021","-0.147 to 0.104","0.741","-2.1%","-13.7% to 11.0%","fitted",NA
+"ambiguous_negative","full_factorial_only","Development","Calcifier","pH",195,23,31,31,62,52,81,"0.097","-0.082 to 0.277","0.289","10.2%","-7.9% to 31.9%","fitted",NA
+"ambiguous_negative","full_factorial_only","Development","Calcifier","T",195,23,31,31,62,52,81,"-0.119","-0.304 to 0.067","0.209","-11.2%","-26.2% to 6.9%","fitted",NA
+"ambiguous_negative","full_factorial_only","Development","Calcifier","T + pH",195,23,31,31,62,52,81,"0.099","-0.071 to 0.268","0.253","10.4%","-6.8% to 30.8%","fitted",NA
+"ambiguous_negative","full_factorial_only","Development","Non-calcifier","pH",74,14,19,19,23,26,25,"0.062","-0.281 to 0.405","0.724","6.4%","-24.5% to 49.9%","fitted",NA
+"ambiguous_negative","full_factorial_only","Development","Non-calcifier","T",74,14,19,19,23,26,25,"0.264","-0.069 to 0.596","0.120","30.2%","-6.7% to 81.5%","fitted",NA
+"ambiguous_negative","full_factorial_only","Development","Non-calcifier","T + pH",74,14,19,19,23,26,25,"0.423","0.082 to 0.764","0.015","52.6%","8.5% to 114.6%","fitted",NA
+"ambiguous_negative","full_factorial_only","Physiology","Calcifier","pH",105,15,19,19,26,36,43,"-0.031","-0.383 to 0.320","0.863","-3.1%","-31.8% to 37.8%","fitted",NA
+"ambiguous_negative","full_factorial_only","Physiology","Calcifier","T",105,15,19,19,26,36,43,"0.000","-0.339 to 0.340","0.998","0.0%","-28.8% to 40.5%","fitted",NA
+"ambiguous_negative","full_factorial_only","Physiology","Calcifier","T + pH",105,15,19,19,26,36,43,"-0.149","-0.488 to 0.189","0.387","-13.9%","-38.6% to 20.8%","fitted",NA
+"ambiguous_negative","full_factorial_only","Physiology","Non-calcifier","pH",112,20,26,26,34,39,39,"-0.009","-0.103 to 0.085","0.848","-0.9%","-9.8% to 8.9%","fitted",NA
+"ambiguous_negative","full_factorial_only","Physiology","Non-calcifier","T",112,20,26,26,34,39,39,"-0.186","-0.278 to -0.094","<0.001","-17.0%","-24.2% to -9.0%","fitted",NA
+"ambiguous_negative","full_factorial_only","Physiology","Non-calcifier","T + pH",112,20,26,26,34,39,39,"-0.096","-0.187 to -0.005","0.039","-9.1%","-17.0% to -0.5%","fitted",NA
+"ambiguous_negative","full_factorial_only","Reproduction","Calcifier","pH",185,15,26,26,53,45,87,"-0.149","-0.241 to -0.057","0.002","-13.8%","-21.4% to -5.5%","fitted",NA
+"ambiguous_negative","full_factorial_only","Reproduction","Calcifier","T",185,15,26,26,53,45,87,"-0.070","-0.165 to 0.025","0.151","-6.8%","-15.3% to 2.6%","fitted",NA
+"ambiguous_negative","full_factorial_only","Reproduction","Calcifier","T + pH",185,15,26,26,53,45,87,"-0.142","-0.230 to -0.054","0.002","-13.2%","-20.6% to -5.2%","fitted",NA
+"ambiguous_negative","full_factorial_only","Reproduction","Non-calcifier","pH",59,11,15,15,17,21,21,"-0.061","-0.272 to 0.150","0.571","-5.9%","-23.8% to 16.2%","fitted",NA
+"ambiguous_negative","full_factorial_only","Reproduction","Non-calcifier","T",59,11,15,15,17,21,21,"-0.253","-0.456 to -0.051","0.014","-22.4%","-36.6% to -4.9%","fitted",NA
+"ambiguous_negative","full_factorial_only","Reproduction","Non-calcifier","T + pH",59,11,15,15,17,21,21,"-0.301","-0.505 to -0.096","0.004","-26.0%","-39.7% to -9.2%","fitted",NA
+"ambiguous_negative","full_factorial_only","Survival","Calcifier","pH",42,8,8,8,12,12,18,"0.195","-0.125 to 0.514","0.233","21.5%","-11.7% to 67.2%","fitted",NA
+"ambiguous_negative","full_factorial_only","Survival","Calcifier","T",42,8,8,8,12,12,18,"0.222","-0.106 to 0.549","0.184","24.8%","-10.0% to 73.2%","fitted",NA
+"ambiguous_negative","full_factorial_only","Survival","Calcifier","T + pH",42,8,8,8,12,12,18,"0.240","-0.067 to 0.546","0.125","27.1%","-6.5% to 72.7%","fitted",NA
+"ambiguous_negative","full_factorial_only","Survival","Non-calcifier","pH",52,12,13,13,16,17,19,"0.085","-0.248 to 0.417","0.618","8.8%","-21.9% to 51.8%","fitted",NA
+"ambiguous_negative","full_factorial_only","Survival","Non-calcifier","T",52,12,13,13,16,17,19,"-0.009","-0.339 to 0.321","0.957","-0.9%","-28.7% to 37.8%","fitted",NA
+"ambiguous_negative","full_factorial_only","Survival","Non-calcifier","T + pH",52,12,13,13,16,17,19,"0.106","-0.222 to 0.433","0.527","11.1%","-19.9% to 54.2%","fitted",NA
+"ambiguous_negative","full_factorial_only","Overall","Calcifier","pH",710,43,77,77,206,191,313,"-0.075","-0.175 to 0.025","0.142","-7.2%","-16.1% to 2.5%","fitted",NA
+"ambiguous_negative","full_factorial_only","Overall","Calcifier","T",710,43,77,77,206,191,313,"-0.072","-0.174 to 0.029","0.163","-7.0%","-16.0% to 3.0%","fitted",NA
+"ambiguous_negative","full_factorial_only","Overall","Calcifier","T + pH",710,43,77,77,206,191,313,"-0.073","-0.167 to 0.022","0.133","-7.0%","-15.4% to 2.2%","fitted",NA
+"ambiguous_negative","full_factorial_only","Overall","Non-calcifier","pH",388,37,64,64,117,135,136,"-0.059","-0.153 to 0.035","0.218","-5.8%","-14.2% to 3.6%","fitted",NA
+"ambiguous_negative","full_factorial_only","Overall","Non-calcifier","T",388,37,64,64,117,135,136,"-0.086","-0.176 to 0.005","0.063","-8.2%","-16.1% to 0.5%","fitted",NA
+"ambiguous_negative","full_factorial_only","Overall","Non-calcifier","T + pH",388,37,64,64,117,135,136,"-0.055","-0.145 to 0.035","0.233","-5.3%","-13.5% to 3.6%","fitted",NA

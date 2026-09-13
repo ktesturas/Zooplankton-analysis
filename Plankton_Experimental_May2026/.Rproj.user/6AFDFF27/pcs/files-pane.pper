@@ -1,9 +1,13 @@
 {
-    "path": "/Volumes/One Touch/Legion/00 Plankton Work/2026/Zooplankton analysis/Plankton_Experimental_May2026/Scripts",
+    "path": "~/Documents/02 Research Collaborations/Zooplankton CC/Zooplankton analysis/Plankton_Experimental_May2026/Scripts/Archived Scripts",
     "sortOrder": [
         {
             "columnIndex": 2,
             "ascending": true
+        },
+        {
+            "columnIndex": 3,
+            "ascending": false
         }
     ]
 }
