@@ -30,25 +30,37 @@ source(data_script)
 # Font setup
 # ===========================================
 
-font_ok <- TRUE
+#font_ok <- TRUE
 
-tryCatch(
-  {
-    font_add_google("Inter", "helv")
-  },
-  error = function(e) {
-    font_ok <<- FALSE
-    message(
-      "Could not load Google font Inter. Using default sans font instead."
-    )
-  }
+#tryCatch(
+#  {
+#    font_add_google("Inter", "helv")
+#  },
+#  error = function(e) {
+#    font_ok <<- FALSE
+#    message(
+#      "Could not load Google font Inter. Using default sans font instead."
+#    )
+#  }
+#)
+
+#showtext_auto()
+
+#fam <- if (font_ok) "helv" else "sans"
+
+sysfonts::font_add(
+  family = "helv",
+  regular = "/System/Library/Fonts/Helvetica.ttc"
 )
 
-showtext_auto()
+sysfonts::font_add(
+  family = "header_bold",
+  regular = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
+)
 
-fam <- if (font_ok) "helv" else "sans"
+showtext::showtext_auto()
 
-
+fam <- "helv"
 # ===========================================
 # Plot styling constants
 # ===========================================
@@ -81,8 +93,8 @@ PREV_LABEL_BOTTOM_Y <- 0.48
 # ---- Point and line styling ----
 
 MEAN_PT_SIZE <- 1.7
-RAW_PT_SIZE  <- 1.0
-RAW_PT_ALPHA <- 0.58
+RAW_PT_SIZE  <- 0.8
+RAW_PT_ALPHA <- 0.35
 RAW_STROKE   <- 0.25
 
 ERR_LW          <- 0.35
@@ -201,8 +213,8 @@ p_header <- ggplot() +
     label = "This study",
     hjust = 0.5,
     vjust = 0.5,
-    family = fam,
-    fontface = "bold",
+    family = "header_bold",
+    fontface = "plain",
     size = HEADER_TEXT_SIZE,
     colour = border_col
   ) +
@@ -214,8 +226,8 @@ p_header <- ggplot() +
     label = PREV_LABEL_TOP,
     hjust = 0.5,
     vjust = 0.5,
-    family = fam,
-    fontface = "bold",
+    family = "header_bold",
+    fontface = "plain",
     size = HEADER_TEXT_SIZE,
     colour = border_col
   ) +
@@ -227,8 +239,8 @@ p_header <- ggplot() +
     label = PREV_LABEL_BOTTOM,
     hjust = 0.5,
     vjust = 0.5,
-    family = fam,
-    fontface = "bold",
+    family = "header_bold",
+    fontface = "plain",
     size = HEADER_TEXT_SIZE,
     colour = border_col
   ) +
@@ -251,7 +263,7 @@ p_header <- ggplot() +
   theme_void() +
   
   theme(
-    plot.margin = margin(8, 14, -2, 10)
+    plot.margin = margin(8, 14, -2, 25)
   )
 
 
@@ -467,10 +479,12 @@ make_rate_panel <- function(
         width = 0.17,
         height = 0
       ),
+      fill = if (panel_name == "Distribution") "#D6E6F3" else "grey80",
+      colour = if (panel_name == "Distribution") "#7FAED3" else "grey60",
       alpha = RAW_PT_ALPHA,
       size = RAW_PT_SIZE,
       stroke = RAW_STROKE,
-      shape = 1,
+      shape = 21,
       show.legend = FALSE
     ) +
     
@@ -485,7 +499,7 @@ make_rate_panel <- function(
         ymin = ci_low_plot,
         ymax = ci_high_plot
       ),
-      width = 0.025,
+      width = 0.15,
       linewidth = ERR_LW,
       colour = mean_col
     ) +
@@ -516,21 +530,6 @@ make_rate_panel <- function(
       colour = mean_col,
       inherit.aes = FALSE
     ) +
-    
-    annotate(
-      "text",
-      x = x_n_right,
-      y = Inf,
-      label = "n",
-      vjust = -0.90,
-      hjust = 0,
-      family = fam,
-      size = N_LABEL_SIZE,
-      fontface = "bold",
-      colour = mean_col
-    ) +
-    
-    
     # ---------------------------------------
   # Scales
   # ---------------------------------------
@@ -625,6 +624,8 @@ make_rate_panel <- function(
     ) +
     
     coord_cartesian(
+      xlim = c(0.5, length(x_levels_master) + 0.5),
+      expand = FALSE,
       clip = "off"
     )
   
@@ -774,7 +775,7 @@ make_bottom_panel <- function(show_grid = TRUE) {
         ymin = lo,
         ymax = hi
       ),
-      width = 0.025,
+      width = 0.15,
       linewidth = ERR_LW,
       colour = mean_col_phen
     ) +
@@ -799,7 +800,7 @@ make_bottom_panel <- function(show_grid = TRUE) {
         ymin = lo,
         ymax = hi
       ),
-      width = 0.025,
+      width = 0.15,
       linewidth = ERR_LW,
       colour = mean_col_dist
     ) +
@@ -831,7 +832,7 @@ make_bottom_panel <- function(show_grid = TRUE) {
           ymin = lo,
           ymax = hi
         ),
-        width = 0.025,
+        width = 0.15,
         linewidth = ERR_LW,
         colour = mean_col_phen
       ) +
@@ -860,7 +861,7 @@ make_bottom_panel <- function(show_grid = TRUE) {
           ymin = lo,
           ymax = hi
         ),
-        width = 0.025,
+        width = 0.15,
         linewidth = ERR_LW,
         colour = mean_col_dist
       ) +
@@ -932,7 +933,7 @@ make_bottom_panel <- function(show_grid = TRUE) {
       
       axis.text.x = element_text(
         size = X_TICK_TEXT_SIZE,
-        angle = 38,
+        angle = 35,
         hjust = 1,
         vjust = 1,
         colour = border_col
@@ -983,7 +984,7 @@ make_bottom_panel <- function(show_grid = TRUE) {
     coord_cartesian(
       clip = "off"
     )
-
+  
   
   # =========================================
   # Sample-size labels
@@ -1073,9 +1074,9 @@ make_bottom_panel <- function(show_grid = TRUE) {
       label = "Distribution",
       vjust = -3.25,
       hjust = 1,
-      family = fam,
+      family = "header_bold",
+      fontface = "plain",
       size = BOTTOM_LABEL_SIZE,
-      fontface = "bold",
       colour = mean_col_dist
     ) +
     
@@ -1086,35 +1087,9 @@ make_bottom_panel <- function(show_grid = TRUE) {
       label = "Phenology",
       vjust = -1.55,
       hjust = 1,
-      family = fam,
+      family = "header_bold",
+      fontface = "plain",
       size = BOTTOM_LABEL_SIZE,
-      fontface = "bold",
-      colour = mean_col_phen
-    ) +
-    
-    annotate(
-      "text",
-      x = x_n_right,
-      y = Inf,
-      label = "n",
-      vjust = -3.25,
-      hjust = 0,
-      family = fam,
-      size = BOTTOM_LABEL_SIZE,
-      fontface = "bold",
-      colour = mean_col_dist
-    ) +
-    
-    annotate(
-      "text",
-      x = x_n_right,
-      y = Inf,
-      label = "n",
-      vjust = -1.55,
-      hjust = 0,
-      family = fam,
-      size = BOTTOM_LABEL_SIZE,
-      fontface = "bold",
       colour = mean_col_phen
     )
   
@@ -1129,12 +1104,66 @@ make_bottom_panel <- function(show_grid = TRUE) {
 
 make_full_plot <- function(show_grid = TRUE) {
   
+  # Annotation placed outside the right edge.
+  # Positions use panel-relative coordinates.
+  direction_annotation <- function(upper_label, lower_label) {
+    
+    grid::grobTree(
+      grid::segmentsGrob(
+        x0 = grid::unit(1, "npc") + grid::unit(21, "pt"),
+        x1 = grid::unit(1, "npc") + grid::unit(21, "pt"),
+        y0 = grid::unit(0.30, "npc"),
+        y1 = grid::unit(0.70, "npc"),
+        arrow = grid::arrow(
+          ends = "both",
+          type = "closed",
+          length = grid::unit(2.5, "pt")
+        ),
+        gp = grid::gpar(
+          col = border_col,
+          fill = border_col,
+          lwd = 0.4
+        )
+      ),
+      
+      grid::textGrob(
+        label = upper_label,
+        x = grid::unit(1, "npc") + grid::unit(21, "pt"),
+        y = grid::unit(0.77, "npc"),
+        gp = grid::gpar(
+          fontfamily = fam,
+          fontsize = X_TICK_TEXT_SIZE,
+          col = border_col
+        )
+      ),
+      
+      grid::textGrob(
+        label = lower_label,
+        x = grid::unit(1, "npc") + grid::unit(21, "pt"),
+        y = grid::unit(0.23, "npc"),
+        gp = grid::gpar(
+          fontfamily = fam,
+          fontsize = X_TICK_TEXT_SIZE,
+          col = border_col
+        )
+      )
+    )
+  }
   
-  # -----------------------------------------
-  # Top panel
-  # -----------------------------------------
   
-  p_top <- make_rate_panel(
+  
+  # Panel a: Percentage consistent
+  p_consistent <- make_bottom_panel(
+    show_grid = show_grid
+  ) +
+    theme(
+      axis.text.x = element_blank(),
+      axis.ticks.x = element_blank(),
+      plot.margin = margin(12, 40, 5, 20)
+    )
+  
+  # Panel b: Distribution
+  p_distribution <- make_rate_panel(
     panel_name = "Distribution",
     ymin = dist_ymin,
     ymax = dist_ymax,
@@ -1145,14 +1174,26 @@ make_full_plot <- function(show_grid = TRUE) {
     ),
     top_margin = 4,
     show_grid = show_grid
-  )
+  ) +
+    annotation_custom(
+      grob = direction_annotation(
+        upper_label = "Poleward",
+        lower_label = "Equatorward"
+      ),
+      xmin = -Inf,
+      xmax = Inf,
+      ymin = -Inf,
+      ymax = Inf
+    ) +
+    theme(
+      axis.text.x = element_blank(),
+      axis.ticks.x = element_blank(),
+      plot.margin = margin(4, 40, 4, 20)
+    )
   
-  
-  # -----------------------------------------
-  # Middle panel
-  # -----------------------------------------
-  
-  p_mid <- make_rate_panel(
+  # Panel c: Phenology
+  # Positive values = later; negative values = earlier.
+  p_phenology <- make_rate_panel(
     panel_name = "Phenology",
     ymin = phen_ymin,
     ymax = phen_ymax,
@@ -1163,60 +1204,87 @@ make_full_plot <- function(show_grid = TRUE) {
     ),
     top_margin = 8,
     show_grid = show_grid
-  )
+  ) +
+    annotation_custom(
+      grob = direction_annotation(
+        upper_label = "Later",
+        lower_label = "Earlier"
+      ),
+      xmin = -Inf,
+      xmax = Inf,
+      ymin = -Inf,
+      ymax = Inf
+    ) +
+    theme(
+      axis.text.x = element_text(
+        size = X_TICK_TEXT_SIZE,
+        angle = 35,
+        hjust = 1,
+        vjust = 1,
+        colour = border_col
+      ),
+      axis.ticks.x = element_line(
+        colour = border_col,
+        linewidth = BORDER_LW
+      ),
+      plot.margin = margin(8, 40, 4, 20)
+    )
   
-  
-  # -----------------------------------------
-  # Bottom panel
-  # -----------------------------------------
-  
-  p_bot <- make_bottom_panel(
-    show_grid = show_grid
-  )
-  
-  
-  # -----------------------------------------
-  # Spacers
-  # -----------------------------------------
+  # Match the header margin to the panels.
+  header <- p_header +
+    theme(
+      plot.margin = margin(8, 40, -2, 20)
+    )
   
   gap <- plot_spacer() +
     theme(
-      plot.margin = margin(
-        0,
-        0,
-        0,
-        0
-      )
+      plot.margin = margin(0, 0, 0, 0)
     )
   
+  # Bold panel labels at the top-left
+  panel_tag_theme <- theme(
+    plot.tag = element_text(
+      family = "header_bold",
+      fontface = "plain",
+      size = 34,
+      colour = border_col,
+      hjust = 3.75,
+      vjust = -1.75
+    ),
+    plot.tag.position = c(0, 1)
+  )
   
-  # -----------------------------------------
-  # Compose
-  # -----------------------------------------
+  p_consistent <- p_consistent +
+    labs(tag = "a") +
+    panel_tag_theme
   
-  p_final <- p_header /
-    p_top /
+  p_distribution <- p_distribution +
+    labs(tag = "b") +
+    panel_tag_theme
+  
+  p_phenology <- p_phenology +
+    labs(tag = "c") +
+    panel_tag_theme
+  
+  p_final <- header /
+    p_consistent /
     gap /
-    p_mid /
+    p_distribution /
     gap /
-    p_bot +
-    
+    p_phenology +
     plot_layout(
       heights = c(
         0.22,
-        1,
+        1.08,
         GAP_HEIGHT,
         1,
         0.20,
-        1.08
+        1
       )
     )
   
-  
   return(p_final)
 }
-
-
 # ===========================================
 # Generate BOTH versions
 # ===========================================
@@ -1296,7 +1364,7 @@ ggsave(
 # ===========================================
 # Done
 # ===========================================
-
+ 
 message(
   "Saved WITH-GRID PNG to: ",
   png_grid_out

@@ -21,21 +21,30 @@ suppressPackageStartupMessages(invisible(
 # Fonts and theme
 # ============================================================
 
-font_ok <- TRUE
+#font_ok <- TRUE
 
-tryCatch(
-  {
-    font_add_google("Inter", "helv")
-  },
-  error = function(e) {
-    font_ok <<- FALSE
-    message("Could not load Google font Inter. Using default sans font instead.")
-  }
+#tryCatch(
+#  {
+#    font_add_google("Inter", "helv")
+#  },
+#  error = function(e) {
+#    font_ok <<- FALSE
+#    message("Could not load Google font Inter. Using default sans font instead.")
+#  }
+#)
+
+#showtext_auto()
+
+#fam <- if (font_ok) "helv" else "sans"
+
+sysfonts::font_add(
+  family = "helv",
+  regular = "/System/Library/Fonts/Helvetica.ttc"
 )
 
 showtext_auto()
 
-fam <- if (font_ok) "helv" else "sans"
+fam <- "helv"
 
 theme_set(theme_minimal(base_size = 18, base_family = fam))
 theme_update(text = element_text(family = fam))
@@ -368,12 +377,13 @@ make_predicted_table <- function(pred_df, scenario_name, scope_name) {
 # Plot aesthetics following 02B style
 # ============================================================
 
-ymin <- -0.9
+ymin <- -0.93
 ymax <- 0.6
 
-brks <- seq(ymin, ymax, by = 0.3)
-brks[abs(brks) < 1e-12] <- 0
+# Fixed tick positions, independent of the lower limit
+brks <- c(-0.9, -0.6, -0.3, 0, 0.3, 0.6)
 brks_no0 <- brks[brks != 0]
+
 
 category_positions <- tibble(
   Category = factor(category_levels, levels = category_levels),
@@ -578,7 +588,7 @@ make_calcifier_sensitivity_plot <- function(scenario_name, scope_name) {
         colour = Treatment_label
       ),
       width = 0.035,
-      linewidth = 0.75
+      linewidth = 0.65
     ) +
     
     geom_point(
@@ -587,10 +597,10 @@ make_calcifier_sensitivity_plot <- function(scenario_name, scope_name) {
         x = x_pos,
         y = mean,
         colour = Treatment_label,
-        fill = Treatment_label,
+        fill = after_scale(colour),
         shape = Calcifier
       ),
-      size = 3.1,
+      size = 2.3,
       stroke = 0.85
     ) +
     
@@ -610,12 +620,14 @@ make_calcifier_sensitivity_plot <- function(scenario_name, scope_name) {
     
     scale_colour_manual(
       values = col_trt_line,
-      labels = c("pH", "T", "T:pH"),
+      breaks = c("pH", "T", "T + pH"),
+      labels = c("pH", "T", "T \u00D7 pH"),
       name = NULL
     ) +
     scale_fill_manual(
       values = fill_trt,
-      labels = c("pH", "T", "T:pH"),
+      breaks = c("pH", "T", "T + pH"),
+      labels = c("pH", "T", "T \u00D7 pH"),
       name = NULL
     ) +
     scale_shape_manual(
@@ -637,8 +649,8 @@ make_calcifier_sensitivity_plot <- function(scenario_name, scope_name) {
       name = "Mean effect size (lnRR)",
       sec.axis = sec_axis(
         ~ (exp(.) - 1) * 100,
-        breaks = c(-30, 0, 30),
-        labels = c("-30%", "0%", "30%"),
+        breaks = seq(-60, 60, by = 20),
+        labels = function(x) paste0(x, "%"),
         name = "% change"
       )
     ) +
@@ -675,7 +687,7 @@ make_calcifier_sensitivity_plot <- function(scenario_name, scope_name) {
       ),
       
       axis.text.x = element_text(
-        angle = 30,
+        angle = 35,
         hjust = 1,
         size = 33,
         colour = "grey10",
@@ -728,6 +740,69 @@ make_calcifier_sensitivity_plot <- function(scenario_name, scope_name) {
       )
     )
   
+  
+  # Qualitative direction annotation
+  # Offset measured from the panel's right edge.
+  ARROW_OFFSET_PT <- 110
+  DIRECTION_TEXT_SIZE <- 34
+  
+  arrow_x <- grid::unit(1, "npc") +
+    grid::unit(ARROW_OFFSET_PT, "pt")
+  
+  direction_grob <- grid::grobTree(
+    
+    grid::segmentsGrob(
+      x0 = arrow_x,
+      x1 = arrow_x,
+      y0 = grid::unit(0.30, "npc"),
+      y1 = grid::unit(0.78, "npc"),
+      arrow = grid::arrow(
+        ends = "both",
+        type = "closed",
+        length = grid::unit(5, "pt")
+      ),
+      gp = grid::gpar(
+        col = "grey10",
+        fill = "grey10",
+        lwd = 0.8
+      )
+    ),
+    
+    grid::textGrob(
+      "Advantageous",
+      x = arrow_x,
+      y = grid::unit(0.86, "npc"),
+      gp = grid::gpar(
+        fontfamily = fam,
+        fontsize = DIRECTION_TEXT_SIZE,
+        col = "grey10"
+      )
+    ),
+    
+    grid::textGrob(
+      "Detrimental",
+      x = arrow_x,
+      y = grid::unit(0.22, "npc"),
+      gp = grid::gpar(
+        fontfamily = fam,
+        fontsize = DIRECTION_TEXT_SIZE,
+        col = "grey10"
+      )
+    )
+  )
+  
+  p <- p +
+    annotation_custom(
+      grob = direction_grob,
+      xmin = -Inf,
+      xmax = Inf,
+      ymin = -Inf,
+      ymax = Inf
+    ) +
+    theme(
+      plot.margin = margin(15, 115, 15, 15)
+    )
+  
   # Save plot data
   write.csv(
     raw_scope,
@@ -763,7 +838,7 @@ make_calcifier_sensitivity_plot <- function(scenario_name, scope_name) {
       paste0("zooplankton_calcifier_sensitivity_", scenario_name, "_", scope_name, ".png")
     ),
     plot = p,
-    width = 12.1,
+    width = 14.9,
     height = 5.3,
     units = "in",
     dpi = 300,

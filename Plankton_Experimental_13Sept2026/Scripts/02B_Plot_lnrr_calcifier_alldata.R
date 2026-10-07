@@ -23,22 +23,30 @@ suppressPackageStartupMessages(invisible(
 # Fonts and theme
 # ============================================================
 
-font_ok <- TRUE
+#font_ok <- TRUE
 
-tryCatch(
-  {
-    font_add_google("Inter", "helv")
-  },
-  error = function(e) {
-    font_ok <<- FALSE
-    message("Could not load Google font Inter. Using default sans font instead.")
-  }
+#tryCatch(
+#  {
+#    font_add_google("Inter", "helv")
+#  },
+#  error = function(e) {
+#    font_ok <<- FALSE
+#    message("Could not load Google font Inter. Using default sans font instead.")
+#  }
+#)
+
+#showtext_auto()
+
+#fam <- if (font_ok) "helv" else "sans"
+
+sysfonts::font_add(
+  family = "helv",
+  regular = "/System/Library/Fonts/Helvetica.ttc"
 )
 
 showtext_auto()
 
-fam <- if (font_ok) "helv" else "sans"
-
+fam <- "helv"
 theme_set(theme_minimal(base_size = 18, base_family = fam))
 theme_update(text = element_text(family = fam))
 
@@ -475,6 +483,18 @@ make_raw_points_for_scope <- function(scope_name) {
 # ============================================================
 
 make_calcifier_interaction_plot <- function(scope_name) {
+  
+  # Match the final 02D axis settings.
+  # Local settings override the earlier global values.
+  ymin <- -0.93
+  ymax <- 0.6
+  brks <- c(-0.9, -0.6, -0.3, 0, 0.3, 0.6)
+  brks_no0 <- brks[brks != 0]
+  
+  # ----------------------------------------------------------
+  # Prepare this scope's data using the original 02B logic
+  # ----------------------------------------------------------
+  
   pred_scope_all <- interaction_predicted_effects_all_scopes %>%
     filter(as.character(analysis_scope) == scope_name)
   
@@ -498,17 +518,40 @@ make_calcifier_interaction_plot <- function(scope_name) {
   
   sum_df_plot <- pred_scope_fitted %>%
     mutate(
-      Category = factor(as.character(Category), levels = category_levels),
-      Treatment_label = factor(as.character(Treatment_label), levels = treatment_label_levels),
-      Calcifier = factor(as.character(Calcifier), levels = calcifier_levels)
+      Category = factor(
+        as.character(Category),
+        levels = category_levels
+      ),
+      Treatment_label = factor(
+        as.character(Treatment_label),
+        levels = treatment_label_levels
+      ),
+      Calcifier = factor(
+        as.character(Calcifier),
+        levels = calcifier_levels
+      )
     ) %>%
     left_join(category_positions, by = "Category") %>%
-    left_join(stream_positions, by = c("Calcifier", "Treatment_label")) %>%
-    left_join(raw_k_table, by = c("Category", "Calcifier", "Treatment_label")) %>%
+    left_join(
+      stream_positions,
+      by = c("Calcifier", "Treatment_label")
+    ) %>%
+    left_join(
+      raw_k_table,
+      by = c("Category", "Calcifier", "Treatment_label")
+    ) %>%
     mutate(
       x_pos = category_x + offset,
-      k_label = ifelse(is.na(k_treatment), "", as.character(k_treatment))
+      k_label = ifelse(
+        is.na(k_treatment),
+        "",
+        as.character(k_treatment)
+      )
     )
+  
+  # ----------------------------------------------------------
+  # Plot
+  # ----------------------------------------------------------
   
   p <- ggplot() +
     annotate(
@@ -520,9 +563,24 @@ make_calcifier_interaction_plot <- function(scope_name) {
       fill = summary_fill,
       colour = NA
     ) +
-    geom_hline(yintercept = brks_no0, colour = "grey90", linewidth = 0.3) +
-    geom_vline(xintercept = vbreaks, colour = "grey90", linewidth = 0.3) +
-    geom_hline(yintercept = 0, colour = "grey50", linewidth = 0.4) +
+    
+    geom_hline(
+      yintercept = brks_no0,
+      colour = "grey90",
+      linewidth = 0.3
+    ) +
+    
+    geom_vline(
+      xintercept = vbreaks,
+      colour = "grey90",
+      linewidth = 0.3
+    ) +
+    
+    geom_hline(
+      yintercept = 0,
+      colour = "grey50",
+      linewidth = 0.4
+    ) +
     
     geom_vline(
       xintercept = response_overall_separator,
@@ -531,6 +589,7 @@ make_calcifier_interaction_plot <- function(scope_name) {
       linewidth = 0.4
     ) +
     
+    # Original jitter-point styling retained
     geom_point(
       data = raw_scope,
       aes(
@@ -555,19 +614,20 @@ make_calcifier_interaction_plot <- function(scope_name) {
         colour = Treatment_label
       ),
       width = 0.035,
-      linewidth = 0.75
+      linewidth = 0.65
     ) +
     
+    # Solid mean points
     geom_point(
       data = sum_df_plot,
       aes(
         x = x_pos,
         y = mean,
         colour = Treatment_label,
-        fill = Treatment_label,
+        fill = after_scale(colour),
         shape = Calcifier
       ),
-      size = 3.1,
+      size = 2.3,
       stroke = 0.85
     ) +
     
@@ -587,43 +647,55 @@ make_calcifier_interaction_plot <- function(scope_name) {
     
     scale_colour_manual(
       values = col_trt_line,
-      labels = c("pH", "T", "pH:T"),
+      breaks = c("pH", "T", "T + pH"),
+      labels = c("pH", "T", "T \u00D7 pH"),
       name = NULL
     ) +
+    
     scale_fill_manual(
       values = fill_trt,
-      labels = c("pH", "T", "pH:T"),
+      breaks = c("pH", "T", "T + pH"),
+      labels = c("pH", "T", "T \u00D7 pH"),
       name = NULL
     ) +
+    
     scale_shape_manual(
       values = calcifier_shapes,
       name = NULL
     ) +
+    
     scale_x_continuous(
       breaks = seq_along(category_levels),
       labels = category_levels,
       limits = c(0.5, length(category_levels) + 0.5),
       expand = expansion(add = 0)
     ) +
+    
     scale_y_continuous(
       limits = c(ymin, ymax),
       breaks = brks,
-      labels = label_number(accuracy = 0.1, trim = TRUE),
+      labels = label_number(
+        accuracy = 0.1,
+        trim = TRUE
+      ),
       expand = expansion(mult = c(0, 0)),
       oob = squish,
       name = "Mean effect size (lnRR)",
       sec.axis = sec_axis(
         ~ (exp(.) - 1) * 100,
-        breaks = c(-30, 0, 30),
-        labels = c("-30%", "0%", "30%"),
+        breaks = seq(-60, 60, by = 20),
+        labels = function(x) paste0(x, "%"),
         name = "% change"
       )
     ) +
-    labs(
-      x = NULL
-    ) +
+    
+    labs(x = NULL) +
+    
     theme(
-      text = element_text(family = fam, colour = "grey10"),
+      text = element_text(
+        family = fam,
+        colour = "grey10"
+      ),
       
       plot.title = element_blank(),
       plot.subtitle = element_blank(),
@@ -652,7 +724,7 @@ make_calcifier_interaction_plot <- function(scope_name) {
       ),
       
       axis.text.x = element_text(
-        angle = 30,
+        angle = 35,
         hjust = 1,
         size = 33,
         colour = "grey10",
@@ -674,16 +746,24 @@ make_calcifier_interaction_plot <- function(scope_name) {
       legend.box.margin = margin(0, 0, 0, 0),
       legend.text = element_text(size = 28),
       
-      plot.margin = margin(15, 15, 15, 15)
+      plot.margin = margin(15, 115, 15, 15)
     ) +
+    
     coord_cartesian(clip = "off") +
+    
     geom_rect(
-      aes(xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf),
+      aes(
+        xmin = -Inf,
+        xmax = Inf,
+        ymin = -Inf,
+        ymax = Inf
+      ),
       inherit.aes = FALSE,
       fill = NA,
       colour = "black",
       linewidth = 0.4
     ) +
+    
     guides(
       colour = guide_legend(
         nrow = 1,
@@ -705,42 +785,132 @@ make_calcifier_interaction_plot <- function(scope_name) {
       )
     )
   
-  # Save plot data
+  # ----------------------------------------------------------
+  # Qualitative direction annotation: final 02D settings
+  # Assumes positive effects indicate advantageous responses.
+  # ----------------------------------------------------------
+  
+  ARROW_OFFSET_PT <- 110
+  DIRECTION_TEXT_SIZE <- 34
+  
+  arrow_x <- grid::unit(1, "npc") +
+    grid::unit(ARROW_OFFSET_PT, "pt")
+  
+  direction_grob <- grid::grobTree(
+    grid::segmentsGrob(
+      x0 = arrow_x,
+      x1 = arrow_x,
+      y0 = grid::unit(0.30, "npc"),
+      y1 = grid::unit(0.78, "npc"),
+      arrow = grid::arrow(
+        ends = "both",
+        type = "closed",
+        length = grid::unit(5, "pt")
+      ),
+      gp = grid::gpar(
+        col = "grey10",
+        fill = "grey10",
+        lwd = 0.8
+      )
+    ),
+    
+    grid::textGrob(
+      "Advantageous",
+      x = arrow_x,
+      y = grid::unit(0.86, "npc"),
+      gp = grid::gpar(
+        fontfamily = fam,
+        fontsize = DIRECTION_TEXT_SIZE,
+        col = "grey10"
+      )
+    ),
+    
+    grid::textGrob(
+      "Detrimental",
+      x = arrow_x,
+      y = grid::unit(0.22, "npc"),
+      gp = grid::gpar(
+        fontfamily = fam,
+        fontsize = DIRECTION_TEXT_SIZE,
+        col = "grey10"
+      )
+    )
+  )
+  
+  p <- p +
+    annotation_custom(
+      grob = direction_grob,
+      xmin = -Inf,
+      xmax = Inf,
+      ymin = -Inf,
+      ymax = Inf
+    )
+  
+  # ----------------------------------------------------------
+  # Preserve the original 02B data exports and filenames
+  # ----------------------------------------------------------
+  
   write.csv(
     raw_scope,
-    file.path(table_dir, paste0("raw_points_calcifier_", scope_name, ".csv")),
+    file.path(
+      table_dir,
+      paste0("raw_points_calcifier_", scope_name, ".csv")
+    ),
     row.names = FALSE
   )
   
   write.csv(
     sum_df_plot,
-    file.path(table_dir, paste0("plot_summary_calcifier_interaction_", scope_name, ".csv")),
+    file.path(
+      table_dir,
+      paste0(
+        "plot_summary_calcifier_interaction_",
+        scope_name,
+        ".csv"
+      )
+    ),
     row.names = FALSE
   )
   
   saveRDS(
     raw_scope,
-    file.path(rds_dir, paste0("raw_points_calcifier_", scope_name, ".rds"))
+    file.path(
+      rds_dir,
+      paste0("raw_points_calcifier_", scope_name, ".rds")
+    )
   )
   
   saveRDS(
     sum_df_plot,
-    file.path(rds_dir, paste0("plot_summary_calcifier_interaction_", scope_name, ".rds"))
+    file.path(
+      rds_dir,
+      paste0(
+        "plot_summary_calcifier_interaction_",
+        scope_name,
+        ".rds"
+      )
+    )
   )
   
   saveRDS(
     p,
-    file.path(rds_dir, paste0("p_calcifier_interaction_", scope_name, ".rds"))
+    file.path(
+      rds_dir,
+      paste0("p_calcifier_interaction_", scope_name, ".rds")
+    )
   )
   
-  # Save figure as PNG only
   ggsave(
     filename = file.path(
       figure_dir,
-      paste0("zooplankton_calcifier_interaction_model_predicted_effects_", scope_name, ".png")
+      paste0(
+        "zooplankton_calcifier_interaction_model_predicted_effects_",
+        scope_name,
+        ".png"
+      )
     ),
     plot = p,
-    width = 12.1,
+    width = 14.9,
     height = 5.3,
     units = "in",
     dpi = 300,
